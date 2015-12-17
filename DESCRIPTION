@@ -1,0 +1,11 @@
+Package: nyc311
+Title: Access the NYC 311 Data
+Version: 0.0.0.9000
+Authors@R: person("Ben", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
+Description: Provides access to the NYC 311 data
+Depends:
+    R (>= 3.2.3),
+    etl
+License: What license is it under?
+LazyData: true
+RoxygenNote: 5.0.1
