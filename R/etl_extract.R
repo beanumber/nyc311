@@ -26,7 +26,7 @@ etl_extract.etl_nyc311 <- function(obj, year = 2015, month = 03, day =18, ...) {
   #read.csv(url(src))
   # I don't know how to download this data. 
   # download.file does not work for this data set
-  download.file(src, "~/Desktop/", method = 'curl')
+  download.file(src, lcl, method = 'curl')
 }
 
 
