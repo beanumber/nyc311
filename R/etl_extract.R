@@ -20,7 +20,8 @@ etl_extract.etl_nyc311 <- function(obj, year = 2015, month = 03, day =18, ...) {
   date = paste0( "'", year, "-", month, "-", day,  "'")
   src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/", basename(src))
+  #lcl <- paste0(dir, "/", basename(src))
+  lcl <- paste0(dir, "/","nyc311data.csv")
   download.file(src, lcl, method = 'curl')
   invisible(obj)
 }
@@ -28,9 +29,18 @@ etl_extract.etl_nyc311 <- function(obj, year = 2015, month = 03, day =18, ...) {
 #' @export
 #' @rdname etl_extract.etl_nyc311
 etl_transform.etl_nyc311 <- function(obj,  year = 2015, month = 03, day =18, ...) {
+  
+  
+  base_url <- "https://data.cityofnewyork.us/resource/"
+  date = paste0( "'", year, "-", month, "-", day,  "'")
+  src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
   dir <- attr(obj, "raw_dir")
+  lcl <- paste0(dir, "/", "nyc311data.csv")
+  nyc311dataframe<-read.csv(lcl)
+  
   new_dir <- attr(obj, "load_dir")
-  file.copy(dir, new_dir)
+  new_lcl <- paste0(new_dir, "/", "nyc311data.csv")
+  write.csv(nyc311dataframe, file = new_lcl)
   invisible(obj)
 }
 
