@@ -5,7 +5,7 @@
 #' 
 #' @examples 
 #' 
-#' calls <- etl("nyc311")
+#' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
 #'   etl_extract() %>%
 #'   etl_transform()
