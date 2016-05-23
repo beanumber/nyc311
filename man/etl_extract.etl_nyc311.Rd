@@ -2,9 +2,13 @@
 % Please edit documentation in R/etl_extract.R
 \name{etl_extract.etl_nyc311}
 \alias{etl_extract.etl_nyc311}
+\alias{etl_transform.etl_nyc311}
 \title{using 311 data}
 \usage{
 \method{etl_extract}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
+  ...)
+
+\method{etl_transform}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
   ...)
 }
 \description{
@@ -14,7 +18,8 @@ using 311 data
 
 calls <- etl("nyc311")
 calls \%>\%
-  etl_extract()
+  etl_extract() \%>\%
+  etl_transform()
 
 }
 
