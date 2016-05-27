@@ -5,8 +5,8 @@
 \alias{etl_transform.etl_nyc311}
 \title{using 311 data}
 \usage{
-\method{etl_extract}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
-  ...)
+\method{etl_extract}{etl_nyc311}(obj, year = 1987:this_year, month = 1:12,
+  day = 1:30, ...)
 
 \method{etl_transform}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
   ...)
@@ -19,7 +19,8 @@ using 311 data
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
   etl_extract() \%>\%
-  etl_transform()
+  etl_transform() \%>\%
+  etl_load()
 
 }
 

@@ -2,4 +2,7 @@
 
 S3method(etl_extract,etl_nyc311)
 S3method(etl_transform,etl_nyc311)
+import(dplyr)
+import(etl)
 importFrom(RSocrata,read.socrata)
+importFrom(utils,download.file)

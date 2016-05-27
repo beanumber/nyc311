@@ -1,28 +1,30 @@
 #' using 311 data
 #' 
 #' @export
+#' @import dplyr
+#' @import etl
 #' @importFrom RSocrata read.socrata
-#' 
+#' @importFrom utils download.file 
 #' @examples 
 #' 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
 #'   etl_extract() %>%
-#'   etl_transform()
-#'
-etl_extract.etl_nyc311 <- function(obj, year = 2015, month = 03, day =18, ...) {
-  #this_year <- as.numeric(format(Sys.Date(), '%Y'))
-  #years <- intersect(1987:this_year, years)
-  #months <- intersect(01:12, months)
-  #days <- intersect(01:30, days)
+#'   etl_transform() %>%
+#'   etl_load()
+#' 
+etl_extract.etl_nyc311 <- function(obj, year = 1987:this_year, month = 01:12, day =01:30, ...) {
+  this_year <- as.numeric(format(Sys.Date(), '%Y'))
+  years <- intersect(1987:this_year, year)
+  months <- intersect(01:12, month)
+  days <- intersect(01:30, day)
   
   base_url <- "https://data.cityofnewyork.us/resource/"
   date = paste0( "'", year, "-", month, "-", day,  "'")
   src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
   dir <- attr(obj, "raw_dir")
-  #lcl <- paste0(dir, "/", basename(src))
   lcl <- paste0(dir, "/","nyc311data.csv")
-  download.file(src, lcl, method = 'curl')
+  utils::download.file(src, lcl)
   invisible(obj)
 }
 
@@ -46,13 +48,15 @@ etl_transform.etl_nyc311 <- function(obj,  year = 2015, month = 03, day =18, ...
 
 #etl load
 etl_load.etl_nyc311 <- function(obj,  year = 2015, month = 03, day =18, ...) {
-  dir <- attr(obj, "raw_dir")
-  base_url <- "https://data.cityofnewyork.us/resource/"
-  src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
   message("Writing NYC311 data to the database...")
+  new_dir <- attr(obj, "load_dir")
+  new_lcl <- paste0(new_dir, "/", "nyc311data.csv")
   date = paste0( "'", year, "-", month, "-", day,  "'")
-  tablename <- paste0("NYC311",date)
-  DBI::dbWriteTable(obj$con, tablename, src, append = TRUE, ...)
+  tablename <- paste0("nyc311", date)
+  DBI::dbWriteTable(conn = obj$con, name = tablename, value = new_lcl, append = TRUE, ...)
+  invisible(obj)
 }
+
+
 
 
