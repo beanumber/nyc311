@@ -5,6 +5,10 @@
 #' @import etl
 #' @importFrom RSocrata read.socrata
 #' @importFrom utils download.file 
+#' @param year a numeric variable that inidicates the year
+#' @param month a numeric variable that inidicates the month
+#' @param day a numeric variable that inidicates the day
+#' 
 #' @examples 
 #' 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
@@ -24,14 +28,13 @@ etl_extract.etl_nyc311 <- function(obj, year = 1987:this_year, month = 01:12, da
   src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/","nyc311data.csv")
-  utils::download.file(src, lcl)
+  utils::download.file(src, lcl, method = "libcurl")
   invisible(obj)
 }
 
 #' @export
 #' @rdname etl_extract.etl_nyc311
 etl_transform.etl_nyc311 <- function(obj,  year = 2015, month = 03, day =18, ...) {
-  
   
   base_url <- "https://data.cityofnewyork.us/resource/"
   date = paste0( "'", year, "-", month, "-", day,  "'")

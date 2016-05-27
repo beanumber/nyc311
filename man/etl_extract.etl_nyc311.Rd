@@ -11,6 +11,13 @@
 \method{etl_transform}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
   ...)
 }
+\arguments{
+\item{year}{a numeric variable that inidicates the year}
+
+\item{month}{a numeric variable that inidicates the month}
+
+\item{day}{a numeric variable that inidicates the day}
+}
 \description{
 using 311 data
 }
