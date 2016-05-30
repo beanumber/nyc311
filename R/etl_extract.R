@@ -29,10 +29,10 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
   end_char <- paste0( "'", as.character(end_d),  "'")
   
   #url
-  base_url <- "https://data.cityofnewyork.us/resource/"
+  base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
   src <- paste0(base_url, 
-                "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)<=", end_char)
-                #,"&$where=date_trunc_ymd(created_date)>", begin_char)
+                "?$where=created_date%20between%20", begin_char,
+                "%20and%20", end_char)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   utils::download.file(src, lcl, method = "auto")
@@ -41,7 +41,7 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
 
 #' @export
 #' @rdname etl_extract.etl_nyc311
-etl_transform.etl_nyc311 <- function(obj, year = 1987:this_year, month = 01:12, day =01:30, ...) {
+etl_transform.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
   #start and end date
   today_date <- Sys.Date()
   origin <- as.Date("2010-01-01")
@@ -55,26 +55,29 @@ etl_transform.etl_nyc311 <- function(obj, year = 1987:this_year, month = 01:12, 
   end_char <- paste0( "'", as.character(end_d),  "'")
   
   #url
-  base_url <- "https://data.cityofnewyork.us/resource/"
+  base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
   src <- paste0(base_url, 
-                "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)<=", end_char)
-  #,"&$where=date_trunc_ymd(created_date)>", begin_char)
+                "?$where=created_date%20between%20", begin_char,
+                "%20and%20", end_char)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   
   #copy filr from raw to load
-  nyc311dataframe<-read.csv(lcl)
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/", begin, "-", end, "nyc311data.csv")
   file.copy(lcl, new_lcl)
+  #resolution_description column has comma
+  
+  
+  #gsub(",", "", new_lcl)
   invisible(obj)
 }
 
 #etl load
-etl_load.etl_nyc311 <- function(obj,  year = 2015, month = 03, day =18, ...) {
+etl_load.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
   message("Writing NYC311 data to the database...")
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/", "nyc311data.csv")
+  new_lcl <- paste0(new_dir, "/", begin, "-", end, "nyc311data.csv")
   date = paste0( "'", year, "-", month, "-", day,  "'")
   tablename <- paste0("nyc311", date)
   DBI::dbWriteTable(conn = obj$con, name = tablename, value = new_lcl, append = TRUE, ...)

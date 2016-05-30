@@ -4,7 +4,7 @@ obj<-calls
 
 #example
 begin <- "2010-01-01"
-end <- "2010-01-03"
+end <- "2010-01-01"
 
 #rvest
 require(rvest)

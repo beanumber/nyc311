@@ -8,8 +8,8 @@
 \method{etl_extract}{etl_nyc311}(obj, begin = "2010-01-01":today_date,
   end = "2010-01-01":today_date, ...)
 
-\method{etl_transform}{etl_nyc311}(obj, year = 1987:this_year, month = 1:12,
-  day = 1:30, ...)
+\method{etl_transform}{etl_nyc311}(obj, begin = "2010-01-01":today_date,
+  end = "2010-01-01":today_date, ...)
 }
 \arguments{
 \item{begin}{begin date}
