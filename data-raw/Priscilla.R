@@ -50,4 +50,29 @@ names(data) <- var.names
 close(f)
 if (nrow(data) != 0 ) {      
   dbWriteTable(con_data, data, name="data",append=TRUE ))
+}
 
+
+
+
+# 05/30/16
+y <- c("1,200","20,000","100","12,111")
+gsub(",", "", y)
+
+
+guess <- read.csv("mtcars.csv", stringsAsFactors=FALSE, nrows=1000)
+create <- sprintf("CREATE TABLE mtcars ( %s )", 
+                  paste0(sprintf('"%s" %s', colnames(guess), 
+                                 sapply(guess, dbDataType, dbObj=mdb)), collapse=","))
+
+#api edpoint
+#https://data.cityofnewyork.us/resource/fhrw-4uyv.json
+
+
+
+https://data.cityofnewyork.us/resource/fhrw-4uyv.csv?created_date<2011-01-02
+
+url <- https://data.cityofnewyork.us/resource/fhrw-4uyv.csv?$where=created_date%20between%20'2015-01-10T12:00:00'%20and%20'2015-01-10T14:00:00'
+
+url <- "https://data.cityofchicago.org/resource/6zsd-86xi.json?$where=date%20between%20'2015-01-10T12:00:00'%20and%20'2015-01-10T14:00:00'"
+utils::download.file(url, lcl, method = "auto")
