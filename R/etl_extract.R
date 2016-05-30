@@ -34,7 +34,7 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
                 #,"&$where=date_trunc_ymd(created_date)>", begin_char)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/","nyc311data.csv")
-  utils::download.file(src, lcl, method = "libcurl")
+  utils::download.file(src, lcl, method = "auto")
   invisible(obj)
 }
 
