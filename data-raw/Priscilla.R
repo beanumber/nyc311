@@ -31,3 +31,23 @@ nyc311_context <- nyc311%>%
 #test_zip<-export(test, "test.csv.zip",format = "csv")
 #unzip(test_zip, exdir = "~/Desktop/")
 
+
+#
+n = 100000 # experiment with this number
+f = file(csv) 
+con = open(f) # open a connection to the file
+data <-read.csv(f,nrows=n,header=TRUE)
+var.names = names(data)    
+
+#setting up sqlite
+con_data = dbConnect(SQLite(), dbname="yoursqlitefile")
+
+while(nrow(data) == n) { # if not reached the end of line
+  dbWriteTable(con_data, data, name="data",append=TRUE )) #write to sqlite 
+data <-read.csv(f,nrows=n,header=FALSE))
+names(data) <- var.names      
+} 
+close(f)
+if (nrow(data) != 0 ) {      
+  dbWriteTable(con_data, data, name="data",append=TRUE ))
+

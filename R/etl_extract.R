@@ -16,16 +16,17 @@
 #'   etl_load()
 #'
 etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
+  #start and end date
   today_date <- Sys.Date()
   origin <- as.Date("2010-01-01")
   begin_date <- as.Date(begin)
   end_date <- as.Date(end)
   begin_num <- intersect(origin:today_date, begin_date)
   end_num <- intersect(origin:today_date, end_date)
-  begin <- as.Date(begin_num, origin = "1970-01-01")
-  end <- as.Date(end_num, origin = "1970-01-01")
-  begin_char <- paste0( "'", as.character(begin),  "'")
-  end_char <- paste0( "'", as.character(end),  "'")
+  begin_d <- as.Date(begin_num, origin = "1970-01-01")
+  end_d <- as.Date(end_num, origin = "1970-01-01")
+  begin_char <- paste0( "'", as.character(begin_d),  "'")
+  end_char <- paste0( "'", as.character(end_d),  "'")
   
   #url
   base_url <- "https://data.cityofnewyork.us/resource/"
@@ -33,7 +34,7 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
                 "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)<=", end_char)
                 #,"&$where=date_trunc_ymd(created_date)>", begin_char)
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/","nyc311data.csv")
+  lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   utils::download.file(src, lcl, method = "auto")
   invisible(obj)
 }
@@ -41,21 +42,31 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
 #' @export
 #' @rdname etl_extract.etl_nyc311
 etl_transform.etl_nyc311 <- function(obj, year = 1987:this_year, month = 01:12, day =01:30, ...) {
-  this_year <- as.numeric(format(Sys.Date(), '%Y'))
-  years <- intersect(1987:this_year, year)
-  months <- intersect(01:12, month)
-  days <- intersect(01:30, day)
+  #start and end date
+  today_date <- Sys.Date()
+  origin <- as.Date("2010-01-01")
+  begin_date <- as.Date(begin)
+  end_date <- as.Date(end)
+  begin_num <- intersect(origin:today_date, begin_date)
+  end_num <- intersect(origin:today_date, end_date)
+  begin_d <- as.Date(begin_num, origin = "1970-01-01")
+  end_d <- as.Date(end_num, origin = "1970-01-01")
+  begin_char <- paste0( "'", as.character(begin_d),  "'")
+  end_char <- paste0( "'", as.character(end_d),  "'")
   
+  #url
   base_url <- "https://data.cityofnewyork.us/resource/"
-  date = paste0( "'", year, "-", month, "-", day,  "'")
-  src <- paste0(base_url, "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)=", date)
+  src <- paste0(base_url, 
+                "fhrw-4uyv.csv?$where=date_trunc_ymd(created_date)<=", end_char)
+  #,"&$where=date_trunc_ymd(created_date)>", begin_char)
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/", "nyc311data.csv")
-  nyc311dataframe<-read.csv(lcl)
+  lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   
+  #copy filr from raw to load
+  nyc311dataframe<-read.csv(lcl)
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/", "nyc311data.csv")
-  write.csv(nyc311dataframe, file = new_lcl)
+  new_lcl <- paste0(new_dir, "/", begin, "-", end, "nyc311data.csv")
+  file.copy(lcl, new_lcl)
   invisible(obj)
 }
 
