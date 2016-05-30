@@ -4,7 +4,14 @@
 year<-2015
 month<-03
 day<-18
-
+begin <- "2010-11-01"
+end <- "2010-11-03"
+today_date <- Sys.Date()
+begin <- as.Date(begin)
+end <- as.Date(end)
+origin <- as.Date("2010-01-01")
+begin_date <- intersect(origin:today_date, begin)
+end_date <- intersect(origin:today_date, end)
 obj<-calls
 require(rvest)
 nyc311<- read_html("https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9")

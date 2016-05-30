@@ -3,26 +3,23 @@
 \name{etl_extract.etl_nyc311}
 \alias{etl_extract.etl_nyc311}
 \alias{etl_transform.etl_nyc311}
-\title{using 311 data}
+\title{Using NYC311 data}
 \usage{
-\method{etl_extract}{etl_nyc311}(obj, year = 1987:this_year, month = 1:12,
-  day = 1:30, ...)
+\method{etl_extract}{etl_nyc311}(obj, begin = "2010-01-01":today_date,
+  end = "2010-01-01":today_date, ...)
 
-\method{etl_transform}{etl_nyc311}(obj, year = 2015, month = 3, day = 18,
-  ...)
+\method{etl_transform}{etl_nyc311}(obj, year = 1987:this_year, month = 1:12,
+  day = 1:30, ...)
 }
 \arguments{
-\item{year}{a numeric variable that inidicates the year}
+\item{begin}{begin date}
 
-\item{month}{a numeric variable that inidicates the month}
-
-\item{day}{a numeric variable that inidicates the day}
+\item{end}{end date}
 }
 \description{
-using 311 data
+Using NYC311 data
 }
 \examples{
-
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
   etl_extract() \%>\%
