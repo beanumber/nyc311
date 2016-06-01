@@ -1,3 +1,5 @@
+devtools::install_github("beanumber/etl")
+library(etl)
 
 #obj
 obj<-calls
@@ -7,6 +9,8 @@ begin <- "2010-01-01"
 end <- "2010-01-01"
 
 #rvest
+
+library(readr)
 require(rvest)
 nyc311<- read_html("https://data.cityofnewyork.us/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9")
 class(nyc311)
@@ -76,3 +80,14 @@ url <- https://data.cityofnewyork.us/resource/fhrw-4uyv.csv?$where=created_date%
 
 url <- "https://data.cityofchicago.org/resource/6zsd-86xi.json?$where=date%20between%20'2015-01-10T12:00:00'%20and%20'2015-01-10T14:00:00'"
 utils::download.file(url, lcl, method = "auto")
+
+
+# Socrata
+library(RSocrata)
+ls.socrata("https://data.cityofnewyork.us/resource/fhrw-4uyv")
+nyc311data <- read.socrata("https://data.cityofnewyork.us/resource/fhrw-4uyv.json?$where=created_date%20between%20'2010-01-01'%20and%20'2010-01-01'")
+
+
+earthquakesDataFrame <- read.socrata("http://soda.demo.socrata.com/resource/4334-bgaj.csv")
+nrow(earthquakesDataFrame) # 1007 (two "pages")
+class(earthquakesDataFrame$Datetime[1]) # P
