@@ -3,7 +3,6 @@
 #' @export
 #' @import dplyr
 #' @import etl
-#' @import lubridate
 #' @importFrom utils download.file 
 #' @param begin begin date
 #' @param end end date
