@@ -3,8 +3,8 @@
 #' @export
 #' @import dplyr
 #' @import etl
-#' @importFrom utils download.file 
-#' @importFrom readr write_delim
+#' @importFrom utils download.file
+#' @inheritParams etl::etl_extract
 #' @param begin begin date
 #' @param end end date
 #' 
@@ -15,18 +15,15 @@
 #'   etl_transform() %>%
 #'   etl_load()
 #'
-etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
+#' calls %>%
+#'   tbl("calls") %>%
+#'   glimpse()
+#'
+#'
+etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
   #start and end date
-  today_date <- Sys.Date()
-  origin <- as.Date("2010-01-01")
-  begin_date <- as.Date(begin)
-  end_date <- as.Date(end)
-  begin_num <- intersect(origin:today_date, begin_date)
-  end_num <- intersect(origin:today_date, end_date)
-  begin_d <- as.Date(begin_num, origin = "1970-01-01")
-  end_d <- as.Date(end_num, origin = "1970-01-01")
-  begin_char <- paste0( "'", as.character(begin_d),  "'")
-  end_char <- paste0( "'", as.character(end_d),  "'")
+  begin_char <- clean_date(begin)
+  end_char <- clean_date(end)
   
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
@@ -40,19 +37,12 @@ etl_extract.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "
 }
 
 #' @export
+#' @importFrom readr write_delim read_csv
 #' @rdname etl_extract.etl_nyc311
-etl_transform.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
+etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
   #start and end date
-  today_date <- Sys.Date()
-  origin <- as.Date("2010-01-01")
-  begin_date <- as.Date(begin)
-  end_date <- as.Date(end)
-  begin_num <- intersect(origin:today_date, begin_date)
-  end_num <- intersect(origin:today_date, end_date)
-  begin_d <- as.Date(begin_num, origin = "1970-01-01")
-  end_d <- as.Date(end_num, origin = "1970-01-01")
-  begin_char <- paste0( "'", as.character(begin_d),  "'")
-  end_char <- paste0( "'", as.character(end_d),  "'")
+  begin_char <- clean_date(begin)
+  end_char <- clean_date(end)
   
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
@@ -64,35 +54,30 @@ etl_transform.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end =
   
   #copy filr from raw to load
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/", begin, "-", end, "nyc311data.csv")
-  datafile <- read.csv(lcl)
-  write_delim(datafile, path = new_lcl, delim = "%")
+  new_lcl <- paste0(new_dir, "/", begin, "_", end, "_nyc311.csv")
+  datafile <- readr::read_csv(lcl)
+  readr::write_delim(datafile, path = new_lcl, delim = "|")
   invisible(obj)
 }
 
+#' @export
+#' @importFrom DBI dbWriteTable
+#' @rdname etl_extract.etl_nyc311
 #etl load
-etl_load.etl_nyc311 <- function(obj, begin = "2010-01-01":today_date, end = "2010-01-01":today_date, ...) {
+etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
   message("Writing NYC311 data to the database...")
   
   #start and end date
-  today_date <- Sys.Date()
-  origin <- as.Date("2010-01-01")
-  begin_date <- as.Date(begin)
-  end_date <- as.Date(end)
-  begin_num <- intersect(origin:today_date, begin_date)
-  end_num <- intersect(origin:today_date, end_date)
-  begin_d <- as.Date(begin_num, origin = "1970-01-01")
-  end_d <- as.Date(end_num, origin = "1970-01-01")
-  begin_char <- paste0( "'", as.character(begin_d),  "'")
-  end_char <- paste0( "'", as.character(end_d),  "'")
+  begin_char <- clean_date(begin)
+  end_char <- clean_date(end)
   
   #dir
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/", begin, "-", end, "nyc311data.csv")
+  new_lcl <- paste0(new_dir, "/", begin, "_", end, "_nyc311.csv")
   
   #table
-  tablename <- paste0("nyc311", "/", begin, "/", end)
-  DBI::dbWriteTable(conn = obj$con, name = tablename, value = new_lcl, append = TRUE, sep = "%", ...)
+  tablename <- paste0("calls")
+  DBI::dbWriteTable(conn = obj$con, name = tablename, value = new_lcl, append = TRUE, sep = "|", ...)
   invisible(obj)
 }
 

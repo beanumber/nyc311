@@ -1,11 +1,16 @@
 Package: nyc311
 Title: Access the NYC 311 Data
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: person("Ben", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
-Description: Provides access to the NYC 311 data
+Description: Provides access to the NYC 311 data, which contains information 
+    about calls to 311. These data are available from the NYC Open Data portal. 
 Depends:
     R (>= 3.2.3),
     etl
-License: What license is it under?
+Imports:
+    DBI,
+    dplyr,
+    readr
+License: CC0
 LazyData: true
 RoxygenNote: 5.0.1
