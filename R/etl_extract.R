@@ -7,6 +7,7 @@
 #' @inheritParams etl::etl_extract
 #' @param begin begin date
 #' @param end end date
+#' @param n number of readings (has to be less than or equal to one million)
 #' 
 #' @examples 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
