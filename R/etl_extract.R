@@ -11,7 +11,7 @@
 #' @examples 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
-#'   etl_extract() %>%
+#'   etl_extract(n = 10) %>%
 #'   etl_transform() %>%
 #'   etl_load()
 #'
@@ -20,7 +20,7 @@
 #'   glimpse()
 #'
 #'
-etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
+etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), n = 0:1000000, ...) {
   #start and end date
   begin_char <- clean_date(begin)
   end_char <- clean_date(end)
@@ -29,7 +29,7 @@ etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date()
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
   src <- paste0(base_url, 
                 "?$where=created_date%20between%20", begin_char,
-                "%20and%20", end_char)
+                "%20and%20", end_char, "&$limit=", n)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   utils::download.file(src, lcl, method = "auto")
@@ -44,14 +44,11 @@ etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date
   begin_char <- clean_date(begin)
   end_char <- clean_date(end)
   
-  #url
-  base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
-  src <- paste0(base_url, 
-                "?$where=created_date%20between%20", begin_char,
-                "%20and%20", end_char)
+  #raw dir
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/", begin, "-", end, "nyc311data.csv")
   
+  #load dir
   #copy filr from raw to load
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/", begin, "_", end, "_nyc311.csv")

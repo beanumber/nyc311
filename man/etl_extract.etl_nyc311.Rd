@@ -7,7 +7,7 @@
 \title{Using NYC311 data}
 \usage{
 \method{etl_extract}{etl_nyc311}(obj, begin = Sys.Date() - 1,
-  end = Sys.Date(), ...)
+  end = Sys.Date(), n = 0:1e+06, ...)
 
 \method{etl_transform}{etl_nyc311}(obj, begin = Sys.Date() - 1,
   end = Sys.Date(), ...)
@@ -39,7 +39,7 @@ Using NYC311 data
 \examples{
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
-  etl_extract() \%>\%
+  etl_extract(n = 10) \%>\%
   etl_transform() \%>\%
   etl_load()
 
