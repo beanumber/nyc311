@@ -14,7 +14,7 @@ Imports:
     DBI,
     dplyr,
     readr
-Suggests: 
+Suggests:
     RSQLite,
     RMySQL,
     RPostgreSQL,
@@ -23,3 +23,4 @@ Suggests:
 License: CC0
 LazyData: true
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
