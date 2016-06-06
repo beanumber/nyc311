@@ -91,3 +91,75 @@ nyc311data <- read.socrata("https://data.cityofnewyork.us/resource/fhrw-4uyv.jso
 earthquakesDataFrame <- read.socrata("http://soda.demo.socrata.com/resource/4334-bgaj.csv")
 nrow(earthquakesDataFrame) # 1007 (two "pages")
 class(earthquakesDataFrame$Datetime[1]) # P
+
+
+
+
+#MySQL Connection
+library(dplyr)
+library(etl)
+db <- src_mysql(dbname = "airlines", host = "localhost",
+                user = "WencongLi", password = "P320718")
+airlines <- etl("airlines", db, dir = "~/Desktop/airlines")
+summary(airlines)
+str(airlines)
+res <- tbl(db, sql("SELECT faa, name FROM airports"))
+res
+
+db1 <- src_mysql(dbname = "macleish", host = "localhost",
+                 user = "WencongLi", password = "P320718")
+macleish <- etl("macleish", db1, dir = "~/Desktop/macleish")
+
+macleish %>%
+  etl_create()
+macleish %>%
+  tbl("orchard") %>%
+  collect() %>%
+  head()
+
+db <- src_mysql(dbname = "airlines", host = "localhost",
+                user = "WencongLi", password = "P320718")
+macleish <- etl("macleish", db)
+
+
+macleish %>%
+  etl_extract() %>%
+  etl_transform() %>%
+  etl_load()
+
+whately <- macleish %>%
+  tbl("whately")
+
+library(DBI)
+con <- dbConnect(MySQL(), dbname = "calls", host = "localhost",
+                 user = "WencongLi", password = "P320718")
+
+close_date <- dbGetQuery(con, "SELECT closed_date
+                         FROM calls")
+head(close_date, 10)
+class(close_date)
+
+
+#
+library(babynames)
+babynames %>%
+  filter(year > 1975) %>%
+  write.csv(file = "babynames.csv", row.names = FALSE)
+births %>%
+  write.csv(file = "births.csv", row.names = FALSE)
+list.files(".", pattern = ".csv")
+glimpse(babynames)
+
+
+glimpse(births)
+
+
+library(RMySQL)
+db <- src_mysql(dbname = "babynamedata", host = "localhost", user = "WencongLi",
+                password = "P320718")
+babynames <- tbl(db, "births")
+babynames %>% filter(name == "Benjamin")
+
+
+
+

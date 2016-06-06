@@ -74,8 +74,7 @@ etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 1, end
   new_lcl <- paste0(new_dir, "/", begin, "_", end, "_nyc311.csv")
   
   #table
-  tablename <- paste0("calls")
-  DBI::dbWriteTable(conn = obj$con, name = tablename, value = new_lcl, append = TRUE, sep = "|", ...)
+  DBI::dbWriteTable(conn = obj$con, name = "calls", value = new_lcl, append = TRUE, sep = "|", ...)
   invisible(obj)
 }
 
