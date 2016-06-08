@@ -21,7 +21,7 @@
 #'   glimpse()
 #'
 #'
-etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), n = 0:1000000, ...) {
+etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, n = 0:1000000, ...) {
   #start and end date
   begin_char <- clean_date(begin)
   end_char <- clean_date(end)
@@ -40,7 +40,8 @@ etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date()
 #' @export
 #' @importFrom readr write_delim read_csv
 #' @rdname etl_extract.etl_nyc311
-etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
+#' @importFrom lubridate ymd_hms
+etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, ...) {
   #start and end date
   begin_char <- clean_date(begin)
   end_char <- clean_date(end)
@@ -54,6 +55,9 @@ etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/", begin, "_", end, "_nyc311.csv")
   datafile <- readr::read_csv(lcl)
+  datafile <- datafile %>%
+    mutate_(created_date = ~as.integer(ymd_hms(created_date))) %>%
+    mutate_(created_date = ~as.POSIXct(created_date, origin = "1970-01-01"))
   readr::write_delim(datafile, path = new_lcl, delim = "|")
   invisible(obj)
 }
@@ -62,7 +66,7 @@ etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 1, end = Sys.Date
 #' @importFrom DBI dbWriteTable
 #' @rdname etl_extract.etl_nyc311
 #etl load
-etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 1, end = Sys.Date(), ...) {
+etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 2, end = Sys.Date()-1, ...) {
   message("Writing NYC311 data to the database...")
   
   #start and end date
