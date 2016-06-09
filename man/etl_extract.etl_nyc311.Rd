@@ -7,7 +7,7 @@
 \title{Using NYC311 data}
 \usage{
 \method{etl_extract}{etl_nyc311}(obj, begin = Sys.Date() - 2,
-  end = Sys.Date() - 1, n = 0:1e+06, ...)
+  end = Sys.Date() - 1, n = 1e+06, ...)
 
 \method{etl_transform}{etl_nyc311}(obj, begin = Sys.Date() - 2,
   end = Sys.Date() - 1, ...)
