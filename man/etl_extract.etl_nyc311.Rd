@@ -24,7 +24,7 @@
 
 \item{n}{number of readings (has to be less than or equal to one million)}
 
-\item{...}{arguments passed to methods}
+\item{...}{arguments passed to \code{\link{download.file}}}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in
