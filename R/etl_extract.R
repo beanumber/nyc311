@@ -33,7 +33,7 @@ etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()
                 "%20and%20", end_char, "&$limit=", n)
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/", begin_char, "-", end_char, "nyc311data.csv")
-  utils::download.file(src, lcl, method = "auto")
+  utils::download.file(src, lcl, ...)
   invisible(obj)
 }
 

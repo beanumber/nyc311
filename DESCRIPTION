@@ -1,10 +1,11 @@
 Package: nyc311
 Title: Access the NYC 311 Data
-Version: 0.0.0.9001
-Authors@R: as.person(c(
-    "Ben Baumer <ben.baumer@gmail.com> [aut, cre]",
-    "Wencong Li Priscilla <liwencong1995@gmail.com> [aut]"
-  ))
+Version: 0.0.0.9002
+Date: 2016-06-08
+Authors@R: c(
+    person("Ben", "Baumer", email = "ben.baumer@gmail.com",
+      role = c("aut", "cre")),
+    person("Wencong", "Li", email = "liwencong1995@gmail.com", role = "aut"))
 Description: Provides access to the NYC 311 data, which contains information 
     about calls to 311. These data are available from the NYC Open Data portal. 
 Depends:
@@ -13,13 +14,15 @@ Depends:
 Imports:
     DBI,
     dplyr,
-    readr
+    readr,
+    lubridate
 Suggests:
     RSQLite,
     RMySQL,
     RPostgreSQL,
     knitr,
     rmarkdown,
+    testthat
 License: CC0
 LazyData: true
 RoxygenNote: 5.0.1
