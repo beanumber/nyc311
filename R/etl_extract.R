@@ -21,7 +21,7 @@
 #'   glimpse()
 #'
 #'
-etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, n = 0:1000000, ...) {
+etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, n = 1000000, ...) {
   #start and end date
   begin_char <- clean_date_begin(begin)
   end_char <- clean_date_end(end)
