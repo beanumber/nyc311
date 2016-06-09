@@ -7,5 +7,10 @@ calls <- calls %>%
   etl_load()
 
 calls <- calls %>%
+  etl_extract(begin = "2016-01-01", end= "2017-01-01",n = 10) %>%
+  etl_transform(begin = "2016-01-01", end= "2017-01-01") %>%
+  etl_load()
+
+calls <- calls %>%
   tbl("calls") %>%
   glimpse() 

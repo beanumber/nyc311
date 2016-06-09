@@ -23,8 +23,8 @@
 #'
 etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, n = 1000000, ...) {
   #start and end date
-  begin_char <- clean_date_begin(begin)
-  end_char <- clean_date_end(end)
+  begin_char <- clean_date(begin,TRUE)
+  end_char <- clean_date(end, FALSE)
   
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
@@ -43,8 +43,8 @@ etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()
 #' @importFrom lubridate ymd_hms
 etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date()-1, ...) {
   #start and end date
-  begin_char <- clean_date_begin(begin)
-  end_char <- clean_date_end(end)
+  begin_char <- clean_date(begin,TRUE)
+  end_char <- clean_date(end, FALSE)
   
   #raw dir
   dir <- attr(obj, "raw_dir")
@@ -70,8 +70,8 @@ etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 2, end
   message("Writing NYC311 data to the database...")
   
   #start and end date
-  begin_char <- clean_date_begin(begin)
-  end_char <- clean_date_end(end)
+  begin_char <- clean_date(begin, TRUE)
+  end_char <- clean_date(end, FALSE)
   
   #dir
   new_dir <- attr(obj, "load_dir")
