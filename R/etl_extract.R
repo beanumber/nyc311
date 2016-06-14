@@ -22,14 +22,17 @@
 #'   glimpse()
 #'
 #'
-etl_extract.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date() - 1, n = 1000000, ...) {
-  #start and end date
-  if (!lubridate::is.Date(as.Date(begin))) {
-    begin <- Sys.Date() - 2
-  }
-  if (!lubridate::is.Date(as.Date(end))) {
-    end <- Sys.Date() - 1
-  }
+etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+  new_month <- month + 1
+  #check if the month is valid
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
+         begin <- as.Date( paste0(year, "-", month, "-01")),
+         begin <- Sys.Date() - 2)
+  
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
+         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
+         end <- Sys.Date() - 1)
+  
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
   src <- paste0(base_url, 

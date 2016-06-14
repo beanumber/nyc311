@@ -6,8 +6,8 @@
 \alias{etl_transform.etl_nyc311}
 \title{Using NYC311 data}
 \usage{
-\method{etl_extract}{etl_nyc311}(obj, begin = Sys.Date() - 2,
-  end = Sys.Date() - 1, n = 1e+06, ...)
+\method{etl_extract}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
+  ...)
 
 \method{etl_transform}{etl_nyc311}(obj, begin = Sys.Date() - 2,
   end = Sys.Date() - 1, ...)
@@ -18,13 +18,13 @@
 \arguments{
 \item{obj}{an \code{\link{etl}} object}
 
-\item{begin}{begin date}
-
-\item{end}{end date}
-
 \item{n}{number of readings (has to be less than or equal to one million)}
 
 \item{...}{arguments passed to \code{\link{download.file}}}
+
+\item{begin}{begin date}
+
+\item{end}{end date}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in
