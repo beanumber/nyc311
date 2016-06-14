@@ -5,9 +5,9 @@
 #' @import etl
 #' @importFrom utils download.file
 #' @inheritParams etl::etl_extract
-#' @param begin begin date
-#' @param end end date
-#' @param n number of readings (has to be less than or equal to one million)
+#' @param year a single year (2010 is the default)
+#' @param month a single month (1 is the default)
+#' @param n number of readings (1000000 is the default)
 #' @param ... arguments passed to \code{\link{download.file}}
 #' 
 #' @examples 
@@ -23,8 +23,8 @@
 #'
 #'
 etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
-  new_month <- month + 1
   #check if the month is valid
+  new_month <- month + 1
   ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
          begin <- as.Date( paste0(year, "-", month, "-01")),
          begin <- Sys.Date() - 2)
@@ -48,20 +48,22 @@ etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, .
 #' @importFrom readr write_delim read_csv
 #' @rdname etl_extract.etl_nyc311
 #' @importFrom lubridate ymd_hms
-etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date() - 1, ...) {
-  #start and end date
-  if (!lubridate::is.Date(as.Date(begin))) {
-    begin <- Sys.Date() - 2
-  }
-  if (!lubridate::is.Date(as.Date(end))) {
-    end <- Sys.Date() - 1
-  }
+etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+  #check if the month is valid
+  new_month <- month + 1
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
+         begin <- as.Date( paste0(year, "-", month, "-01")),
+         begin <- Sys.Date() - 2)
+  
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
+         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
+         end <- Sys.Date() - 1)
+  
   #raw dir
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/nyc311_", begin, "_", end, ".csv")
   
-  #load dir
-  #copy filr from raw to load
+  #new dir
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/", basename(lcl))
   datafile <- readr::read_csv(lcl)
@@ -73,22 +75,25 @@ etl_transform.etl_nyc311 <- function(obj, begin = Sys.Date() - 2, end = Sys.Date
 #' @importFrom DBI dbWriteTable
 #' @rdname etl_extract.etl_nyc311
 #etl load
-etl_load.etl_nyc311 <- function(obj, schema = FALSE, begin = Sys.Date() - 2, end = Sys.Date()-1, ...) {
-  message("Writing NYC311 data to the database...")
+etl_load.etl_nyc311 <- function(obj, schema = FALSE, year = 2010 , month = 1 , n = 1000000, ...) {
   
-  #start and end date
-  if (!lubridate::is.Date(as.Date(begin))) {
-    begin <- Sys.Date() - 2
-  }
-  if (!lubridate::is.Date(as.Date(end))) {
-    end <- Sys.Date() - 1
-  }
-  #dir
+  #check if the month is valid
+  new_month <- month + 1
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
+         begin <- as.Date( paste0(year, "-", month, "-01")),
+         begin <- Sys.Date() - 2)
+  
+  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
+         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
+         end <- Sys.Date() - 1)
+  
+  #new dir
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/nyc311_", begin, "_", end, ".csv")
   
   #table
   DBI::dbWriteTable(conn = obj$con, name = "calls", value = new_lcl, append = TRUE, sep = "|", ...)
+  message("Writing NYC311 data to the database...")
   invisible(obj)
 }
 

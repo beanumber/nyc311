@@ -9,22 +9,22 @@
 \method{etl_extract}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
   ...)
 
-\method{etl_transform}{etl_nyc311}(obj, begin = Sys.Date() - 2,
-  end = Sys.Date() - 1, ...)
+\method{etl_transform}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
+  ...)
 
-\method{etl_load}{etl_nyc311}(obj, schema = FALSE, begin = Sys.Date() - 2,
-  end = Sys.Date() - 1, ...)
+\method{etl_load}{etl_nyc311}(obj, schema = FALSE, year = 2010, month = 1,
+  n = 1e+06, ...)
 }
 \arguments{
 \item{obj}{an \code{\link{etl}} object}
 
-\item{n}{number of readings (has to be less than or equal to one million)}
+\item{year}{a single year (2010 is the default)}
+
+\item{month}{a single month (1 is the default)}
+
+\item{n}{number of readings (1000000 is the default)}
 
 \item{...}{arguments passed to \code{\link{download.file}}}
-
-\item{begin}{begin date}
-
-\item{end}{end date}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in
