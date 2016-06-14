@@ -91,6 +91,13 @@ earthquakesDataFrame <- read.socrata("http://soda.demo.socrata.com/resource/4334
 nrow(earthquakesDataFrame) # 1007 (two "pages")
 class(earthquakesDataFrame$Datetime[1]) # P
 
-
+#--------------------------------------------------------------------------------
+#transform data type example
+calls %>%
+  #'  mutate(closed_date = as.Date(closed_date)) %>%
+  #'  mutate(created_date = as.Date(created_date)) %>%
+  #'  mutate(updated_date = as.Date(resolution_action_updated_date)) %>%
+  #'  mutate(closed_date = as.Date(closed_date)) %>%
+  #'  mutate(closed_date = as.Date(closed_date)) 
 
 
