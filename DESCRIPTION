@@ -1,6 +1,6 @@
 Package: nyc311
 Title: Access the NYC 311 Data
-Version: 0.0.0.9002
+Version: 0.0.0.9003
 Date: 2016-06-08
 Authors@R: c(
     person("Ben", "Baumer", email = "ben.baumer@gmail.com",

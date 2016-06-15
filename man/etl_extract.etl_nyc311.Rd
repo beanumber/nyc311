@@ -41,7 +41,7 @@ Using NYC311 data
 \examples{
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
-  etl_extract(n = 10) \%>\%
+  etl_extract(method = "curl") \%>\%
   etl_transform() \%>\%
   etl_load()
 

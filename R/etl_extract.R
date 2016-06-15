@@ -13,7 +13,7 @@
 #' @examples 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
-#'   etl_extract(n = 10) %>%
+#'   etl_extract(method = "curl") %>%
 #'   etl_transform() %>%
 #'   etl_load()
 #'
@@ -39,7 +39,7 @@ etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, .
                 "?$where=created_date%20between%20'", begin,
                 "'%20and%20'", end, "'&$limit=", format(n, scientific = FALSE))
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/nyc311_", begin, "_", end, ".csv")
+  lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
   utils::download.file(src, lcl, ...)
   invisible(obj)
 }
@@ -49,19 +49,9 @@ etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, .
 #' @rdname etl_extract.etl_nyc311
 #' @importFrom lubridate ymd_hms
 etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
-  #check if the month is valid
-  new_month <- month + 1
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
-         begin <- as.Date( paste0(year, "-", month, "-01")),
-         begin <- Sys.Date() - 2)
-  
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
-         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
-         end <- Sys.Date() - 1)
-  
   #raw dir
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/nyc311_", begin, "_", end, ".csv")
+  lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
   
   #new dir
   new_dir <- attr(obj, "load_dir")
@@ -76,20 +66,9 @@ etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000,
 #' @rdname etl_extract.etl_nyc311
 #etl load
 etl_load.etl_nyc311 <- function(obj, schema = FALSE, year = 2010 , month = 1 , n = 1000000, ...) {
-  
-  #check if the month is valid
-  new_month <- month + 1
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
-         begin <- as.Date( paste0(year, "-", month, "-01")),
-         begin <- Sys.Date() - 2)
-  
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
-         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
-         end <- Sys.Date() - 1)
-  
   #new dir
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/nyc311_", begin, "_", end, ".csv")
+  new_lcl <- paste0(new_dir, "/nyc311_", year, "_", month, ".csv")
   
   #table
   DBI::dbWriteTable(conn = obj$con, name = "calls", value = new_lcl, append = TRUE, sep = "|", ...)
