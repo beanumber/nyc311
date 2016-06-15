@@ -20,6 +20,15 @@
 #' calls %>%
 #'   tbl("calls") %>%
 #'   glimpse()
+#'   
+#' calls_2010_01 <- calls %>%
+#'   tbl("calls") %>%
+#'   collect()
+#'   
+#' calls_2010_01_cleaned <- calls_2010_01 %>%
+#'   mutate(closed_date = as.Date(closed_date, tz = "EST")) %>%
+#'   mutate(created_date = as.Date(created_date, tz = "EST")) %>%
+#'   mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
 #'
 #'
 etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
