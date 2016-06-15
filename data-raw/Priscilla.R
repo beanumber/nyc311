@@ -100,4 +100,9 @@ calls %>%
   #'  mutate(closed_date = as.Date(closed_date)) %>%
   #'  mutate(closed_date = as.Date(closed_date)) 
 
+  
+#--------------------------------------------------------------------------------
+# I recommend checking the year and month parameters separately. 
+# and then separately check that month is an integer between 1 and 12. 
+# Then you can be sure that as.Date will return a valid date.
 

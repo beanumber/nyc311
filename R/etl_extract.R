@@ -32,16 +32,23 @@
 #'
 #'
 etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+  #check if the year is valid
+  ifelse( year >= 2010 & year < lubridate::year(Sys.Date()),
+         year_cleaned <- year,
+         year_cleaned  <- 2010)
   #check if the month is valid
-  new_month <- month + 1
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", month, "-01"))),
-         begin <- as.Date( paste0(year, "-", month, "-01")),
-         begin <- Sys.Date() - 2)
+  ifelse( month >= 1 & month <=12,
+          month_cleaned <- month,
+          month_cleaned  <- 1)
+  #create begin and end date
+  new_month <- month_cleaned + 1
+  new_year <- year_cleaned +1
+  begin <- as.Date( paste0(year_cleaned, "-", month_cleaned, "-01"))
   
-  ifelse(lubridate::is.Date(as.Date(paste0(year, "-", new_month, "-01"))),
-         end <- as.Date( paste0(year, "-", new_month, "-01")) -1,
-         end <- Sys.Date() - 1)
-  
+  ifelse(new_month == 13,
+         end <- as.Date( paste0(new_year,"-01-01")) -1,
+         end <- as.Date( paste0(year_cleaned, "-", new_month, "-01")) -1)
+
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
   src <- paste0(base_url, 
