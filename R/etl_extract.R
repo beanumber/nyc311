@@ -8,7 +8,7 @@
 #' @param year a single year (2010 is the default)
 #' @param month a single month (1 is the default)
 #' @param n number of readings (1000000 is the default)
-#' @param ... arguments passed to \code{\link{download.file}}
+#' @param ... arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.
 #' 
 #' @examples 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
