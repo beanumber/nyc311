@@ -4,6 +4,7 @@
 #' @import dplyr
 #' @import etl
 #' @importFrom utils download.file
+#' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
 #' @param year a single year (2010 is the default)
 #' @param month a single month (1 is the default)
@@ -31,29 +32,17 @@
 #'   mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
 #'
 #'
-etl_extract.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
+                                   months = lubridate::month(Sys.Date()), n = 1000000, ...) {
   #check if the year is valid
-  ifelse( year >= 2010 & year < lubridate::year(Sys.Date()),
-         year_cleaned <- year,
-         year_cleaned  <- 2010)
-  #check if the month is valid
-  ifelse( month >= 1 & month <=12,
-          month_cleaned <- month,
-          month_cleaned  <- 1)
-  #create begin and end date
-  new_month <- month_cleaned + 1
-  new_year <- year_cleaned +1
-  begin <- as.Date( paste0(year_cleaned, "-", month_cleaned, "-01"))
-  
-  ifelse(new_month == 13,
-         end <- as.Date( paste0(new_year,"-01-01")) -1,
-         end <- as.Date( paste0(year_cleaned, "-", new_month, "-01")) -1)
+  valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
 
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
-  src <- paste0(base_url, 
-                "?$where=created_date%20between%20'", begin,
-                "'%20and%20'", end, "'&$limit=", format(n, scientific = FALSE))
+  valid_months <- mutate(valid_months, src = paste0(base_url, 
+                  "?$where=created_date%20between%20'", month_begin,
+                  "'%20and%20'", month_end, "'&$limit=", format(n, scientific = FALSE)))
+  src <- valid_months$src
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
   utils::download.file(src, lcl, ...)
