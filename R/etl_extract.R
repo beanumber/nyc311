@@ -73,7 +73,7 @@ etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000,
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/", basename(lcl))
   datafile <- readr::read_csv(lcl)
-  readr::write_delim(datafile, path = new_lcl, delim = "|")
+  readr::write_delim(datafile, path = new_lcl, delim = "|", na = "")
   invisible(obj)
 }
 

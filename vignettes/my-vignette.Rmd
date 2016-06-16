@@ -23,7 +23,7 @@ The `nyc311` package provides a interface for urser who are not experts of SQL t
 ### Install packages
 The `etl` package provides the generic framework for the `nyc311` package. To install the `nyc311` package, you must install etl first. Since the `nyc311`  packages currently live on GitHub and not on CRAN, you have to install it manually.
 
-```{r, message=FALSE}
+```{r, eval=FALSE, message=FALSE}
 install.packages("devtools", repos="http://cran.rstudio.com/")
 devtools::install_github("beanumber/nyc311")
 ```
@@ -52,8 +52,8 @@ A SQLite database is created in the ``\\dir` that you specified.
 
 ### Populate the database:
 ```{r, message=FALSE}
-calls <- etl("nyc311") %>%
-  etl_extract(n = 100) %>%
+calls %>%
+  etl_extract(method = "curl") %>%
   etl_transform() %>%
   etl_load()
 ```
@@ -74,10 +74,11 @@ Since all of the `Date` variables have been converted into `char` variables, it 
 
 ### Transform data types:
 ```{r, message=FALSE}
+library(lubridate)
 calls_2010_01_cleaned <- calls_2010_01 %>%
-  mutate(closed_date = as.Date(closed_date, tz = "EST")) %>%
-  mutate(created_date = as.Date(created_date, tz = "EST")) %>%
-  mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
+  mutate(closed_date = ymd_hms(closed_date)) %>%
+  mutate(created_date = ymd_hms(created_date)) %>%
+  mutate(resolution_action_updated_date = ymd_hms(resolution_action_updated_date))
 ```
 
 Now, take a look at it again.
