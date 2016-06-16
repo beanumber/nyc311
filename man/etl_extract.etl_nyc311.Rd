@@ -24,7 +24,7 @@
 
 \item{n}{number of readings (1000000 is the default)}
 
-\item{...}{arguments passed to \code{\link{download.file}}}
+\item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in

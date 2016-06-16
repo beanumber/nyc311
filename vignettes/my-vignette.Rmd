@@ -1,0 +1,87 @@
+---
+title: "NYC OpenData - NYC 311 Phone Call Information"
+author: "Wencong Li (liwencong1995@gmail.com)"
+date: "06/06/2016"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using etl to connect to a MySQL database & Using NYC311 data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE, message=FALSE}
+library(knitr)
+opts_chunk$set(fig.width = 6, fig.height = 4)
+```
+
+
+## NYC 311 Open Data 
+
+The `nyc311` package provides a interface for urser who are not experts of SQL to create and maintain an SQL database of NYC 311 Phone Call information from NYC OpenData <https://nycopendata.socrata.com>. For `nyc311` package ursers, a reliable data storage directory is all they need . 
+
+## Get started:
+### Install packages
+The `etl` package provides the generic framework for the `nyc311` package. To install the `nyc311` package, you must install etl first. Since the `nyc311`  packages currently live on GitHub and not on CRAN, you have to install it manually.
+
+```{r, message=FALSE}
+install.packages("devtools", repos="http://cran.rstudio.com/")
+devtools::install_github("beanumber/nyc311")
+```
+
+### Load the package
+This command loads both `etl` and `dplyr`.
+```{r, message=FALSE}
+library(nyc311)
+```
+
+### Database
+The `etl` function has three variables -- `object`, `dir`, and `db`.
+
+`object` is the etl object that you want to create. 
+
+`dir` is a local directory to store files. If you don't specify one, a temporary directory will be created for you.
+
+`db` is a connection to an SQL database. If you don't specify one, a SQLite database will be created for you in dir. MySQL or PostgreSQL database can also be created, but these require external configurations that can be hard to understand for people who are not familiar with SQL. 
+
+## Examples
+### Create a etl Object:
+```{r}
+calls <- etl("nyc311", dir = "~/Desktop/nyc311")
+```
+A SQLite database is created in the ``\\dir` that you specified. 
+
+### Populate the database:
+```{r, message=FALSE}
+calls <- etl("nyc311") %>%
+  etl_extract(n = 100) %>%
+  etl_transform() %>%
+  etl_load()
+```
+The SQLite database that has just been created is populated with 100 readings from Janarary, 2010 NYC 311 data.
+
+Now you can pull the data that you are interested in into R Environment.
+```{r, message=FALSE}
+calls_2010_01 <- calls %>%
+  tbl("calls") %>%
+  collect()
+```
+
+And take a look at it.
+```{r, message=FALSE}
+glimpse(calls_2010_01)
+```
+Since all of the `Date` variables have been converted into `char` variables, it would be helpful to transform the data types.
+
+### Transform data types:
+```{r, message=FALSE}
+calls_2010_01_cleaned <- calls_2010_01 %>%
+  mutate(closed_date = as.Date(closed_date, tz = "EST")) %>%
+  mutate(created_date = as.Date(created_date, tz = "EST")) %>%
+  mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
+```
+
+Now, take a look at it again.
+```{r, message=FALSE}
+glimpse(calls_2010_01_cleaned)
+```
+
