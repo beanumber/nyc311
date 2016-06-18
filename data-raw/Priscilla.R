@@ -106,3 +106,13 @@ calls %>%
 # and then separately check that month is an integer between 1 and 12. 
 # Then you can be sure that as.Date will return a valid date.
 
+
+#--------------------------------------------------------------------------------
+install.packages("devtools")
+devtools::install_github("beanumber/etl")
+library(etl)
+valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
+years <- 2010:2011
+months <- 1:3
+n <- 100
+obj <- calls

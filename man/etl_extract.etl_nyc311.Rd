@@ -6,8 +6,8 @@
 \alias{etl_transform.etl_nyc311}
 \title{Using NYC311 data}
 \usage{
-\method{etl_extract}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
-  ...)
+\method{etl_extract}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
+  months = lubridate::month(Sys.Date()), n = 1e+06, ...)
 
 \method{etl_transform}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
   ...)
@@ -18,13 +18,13 @@
 \arguments{
 \item{obj}{an \code{\link{etl}} object}
 
-\item{year}{a single year (2010 is the default)}
-
-\item{month}{a single month (1 is the default)}
-
 \item{n}{number of readings (1000000 is the default)}
 
 \item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
+
+\item{year}{a single year (2010 is the default)}
+
+\item{month}{a single month (1 is the default)}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in
@@ -41,23 +41,13 @@ Using NYC311 data
 \examples{
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
-  etl_extract(method = "curl") \%>\%
+  etl_extract(years = 2010:2011, months = 1:3, n =100) \%>\%
   etl_transform() \%>\%
   etl_load()
 
 calls \%>\%
   tbl("calls") \%>\%
   glimpse()
-  
-calls_2010_01 <- calls \%>\%
-  tbl("calls") \%>\%
-  collect()
-  
-calls_2010_01_cleaned <- calls_2010_01 \%>\%
-  mutate(closed_date = as.Date(closed_date, tz = "EST")) \%>\%
-  mutate(created_date = as.Date(created_date, tz = "EST")) \%>\%
-  mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
-
 
 }
 

@@ -14,23 +14,13 @@
 #' @examples 
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
-#'   etl_extract(method = "curl") %>%
+#'   etl_extract(years = 2010:2011, months = 1:3, n =100) %>%
 #'   etl_transform() %>%
 #'   etl_load()
 #'
 #' calls %>%
 #'   tbl("calls") %>%
 #'   glimpse()
-#'   
-#' calls_2010_01 <- calls %>%
-#'   tbl("calls") %>%
-#'   collect()
-#'   
-#' calls_2010_01_cleaned <- calls_2010_01 %>%
-#'   mutate(closed_date = as.Date(closed_date, tz = "EST")) %>%
-#'   mutate(created_date = as.Date(created_date, tz = "EST")) %>%
-#'   mutate(resolution_updated_date = as.Date(resolution_action_updated_date, tz = "EST")) 
-#'
 #'
 etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
                                    months = lubridate::month(Sys.Date()), n = 1000000, ...) {
@@ -42,10 +32,10 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   valid_months <- mutate(valid_months, src = paste0(base_url, 
                   "?$where=created_date%20between%20'", month_begin,
                   "'%20and%20'", month_end, "'&$limit=", format(n, scientific = FALSE)))
-  src <- valid_months$src
+  src_length <- nrow(valid_src)
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
-  utils::download.file(src, lcl, ...)
+  valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_src$year, "_", valid_src$month, ".csv"))
+  for (i in 1:src_length) utils::download.file(valid_months$src[i], valid_months$lcl[i], ...)
   invisible(obj)
 }
 
@@ -54,6 +44,9 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
 #' @rdname etl_extract.etl_nyc311
 #' @importFrom lubridate ymd_hms
 etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+  #check if the year is valid
+  valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
+  
   #raw dir
   dir <- attr(obj, "raw_dir")
   lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
@@ -71,6 +64,9 @@ etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000,
 #' @rdname etl_extract.etl_nyc311
 #etl load
 etl_load.etl_nyc311 <- function(obj, schema = FALSE, year = 2010 , month = 1 , n = 1000000, ...) {
+  #check if the year is valid
+  valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
+  
   #new dir
   new_dir <- attr(obj, "load_dir")
   new_lcl <- paste0(new_dir, "/nyc311_", year, "_", month, ".csv")
