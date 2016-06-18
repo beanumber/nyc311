@@ -9,11 +9,12 @@
 \method{etl_extract}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
   months = lubridate::month(Sys.Date()), n = 1e+06, ...)
 
-\method{etl_transform}{etl_nyc311}(obj, year = 2010, month = 1, n = 1e+06,
-  ...)
+\method{etl_transform}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
+  months = lubridate::month(Sys.Date()), ...)
 
-\method{etl_load}{etl_nyc311}(obj, schema = FALSE, year = 2010, month = 1,
-  n = 1e+06, ...)
+\method{etl_load}{etl_nyc311}(obj, schema = FALSE,
+  years = lubridate::year(Sys.Date()),
+  months = lubridate::month(Sys.Date()), ...)
 }
 \arguments{
 \item{obj}{an \code{\link{etl}} object}
@@ -21,10 +22,6 @@
 \item{n}{number of readings (1000000 is the default)}
 
 \item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
-
-\item{year}{a single year (2010 is the default)}
-
-\item{month}{a single month (1 is the default)}
 
 \item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
 vector containing the schema itself. If \code{schema = TRUE}, then the built-in
@@ -34,6 +31,10 @@ if your object is of type \code{\link[dplyr]{src_mysql}}, then make sure that
 the schema you specify here is written in MySQL (and not PostgreSQL). Please
 note that SQL syntax is not, in general, completely portable. Use with caution, as this may
 clobber any existing data you have in an existing database.}
+
+\item{year}{a single year (2010 is the default)}
+
+\item{month}{a single month (1 is the default)}
 }
 \description{
 Using NYC311 data
@@ -42,7 +43,7 @@ Using NYC311 data
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
   etl_extract(years = 2010:2011, months = 1:3, n =100) \%>\%
-  etl_transform() \%>\%
+  etl_transform(years = 2010:2011, months = 1:3) \%>\%
   etl_load()
 
 calls \%>\%

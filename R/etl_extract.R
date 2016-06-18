@@ -15,7 +15,7 @@
 #' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 #' calls %>%
 #'   etl_extract(years = 2010:2011, months = 1:3, n =100) %>%
-#'   etl_transform() %>%
+#'   etl_transform(years = 2010:2011, months = 1:3) %>%
 #'   etl_load()
 #'
 #' calls %>%
@@ -32,9 +32,9 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   valid_months <- mutate(valid_months, src = paste0(base_url, 
                   "?$where=created_date%20between%20'", month_begin,
                   "'%20and%20'", month_end, "'&$limit=", format(n, scientific = FALSE)))
-  src_length <- nrow(valid_src)
+  src_length <- nrow(valid_months)
   dir <- attr(obj, "raw_dir")
-  valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_src$year, "_", valid_src$month, ".csv"))
+  valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_months$year, "_", valid_months$month, ".csv"))
   for (i in 1:src_length) utils::download.file(valid_months$src[i], valid_months$lcl[i], ...)
   invisible(obj)
 }
@@ -43,19 +43,24 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
 #' @importFrom readr write_delim read_csv
 #' @rdname etl_extract.etl_nyc311
 #' @importFrom lubridate ymd_hms
-etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000, ...) {
+etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
+                                     months = lubridate::month(Sys.Date()), ...) {
   #check if the year is valid
   valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
   
   #raw dir
   dir <- attr(obj, "raw_dir")
-  lcl <- paste0(dir, "/nyc311_", year, "_", month, ".csv")
+  src_length <- nrow(valid_months)
+  dir <- attr(obj, "raw_dir")
+  valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_months$year, "_", valid_months$month, ".csv"))
   
   #new dir
   new_dir <- attr(obj, "load_dir")
-  new_lcl <- paste0(new_dir, "/", basename(lcl))
-  datafile <- readr::read_csv(lcl)
-  readr::write_delim(datafile, path = new_lcl, delim = "|", na = "")
+  valid_months <- mutate(valid_months, new_lcl = paste0(new_dir, "/", basename(lcl)))
+  for (i in 1:src_length) {
+    datafile <- readr::read_csv(valid_months$lcl[i])
+    readr::write_delim(datafile, path = valid_months$new_lcl[i], delim = "|", na = "")
+  }
   invisible(obj)
 }
 
@@ -63,7 +68,8 @@ etl_transform.etl_nyc311 <- function(obj, year = 2010 , month = 1 , n = 1000000,
 #' @importFrom DBI dbWriteTable
 #' @rdname etl_extract.etl_nyc311
 #etl load
-etl_load.etl_nyc311 <- function(obj, schema = FALSE, year = 2010 , month = 1 , n = 1000000, ...) {
+etl_load.etl_nyc311 <- function(obj, schema = FALSE, years = lubridate::year(Sys.Date()), 
+                                                     months = lubridate::month(Sys.Date()), ...) {
   #check if the year is valid
   valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
   
