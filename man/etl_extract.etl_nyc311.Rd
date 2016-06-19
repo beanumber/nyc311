@@ -44,11 +44,15 @@ calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
   etl_extract(years = 2010:2011, months = 1:3, n =100) \%>\%
   etl_transform(years = 2010:2011, months = 1:3) \%>\%
-  etl_load()
+  etl_load(years = 2010:2011, months = 1:3)
 
 calls \%>\%
   tbl("calls") \%>\%
   glimpse()
+  
+calls <- calls \%>\%
+  tbl("calls") \%>\%
+  collect()
 
 }
 
