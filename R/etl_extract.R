@@ -65,7 +65,7 @@ etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   valid_months <- mutate(valid_months, new_lcl = paste0(new_dir, "/", basename(lcl)))
   for (i in 1:src_length) {
     datafile <- readr::read_csv(valid_months$lcl[i])
-    readr::write_delim(datafile, path = valid_months$new_lcl[i], delim = "|", na = "NULL")
+    readr::write_delim(datafile, path = valid_months$new_lcl[i], delim = "|", na = "")
   }
   invisible(obj)
 }

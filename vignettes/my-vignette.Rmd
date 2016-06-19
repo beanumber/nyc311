@@ -53,36 +53,51 @@ A SQLite database is created in the ``\\dir` that you specified.
 ### Populate the database:
 ```{r, message=FALSE}
 calls %>%
-  etl_extract(method = "curl") %>%
-  etl_transform() %>%
-  etl_load()
+  etl_extract(years = 2010:2011, months = 1:2, n = 1000) %>%
+  etl_transform(years = 2010:2011, months = 1:2) %>%
+  etl_load(years = 2010:2011, months = 1:2)
 ```
 The SQLite database that has just been created is populated with 100 readings from Janarary, 2010 NYC 311 data.
 
 Now you can pull the data that you are interested in into R Environment.
 ```{r, message=FALSE}
-calls_2010_01 <- calls %>%
+calls <- calls %>%
   tbl("calls") %>%
   collect()
 ```
 
 And take a look at it.
 ```{r, message=FALSE}
-glimpse(calls_2010_01)
+glimpse(calls)
 ```
 Since all of the `Date` variables have been converted into `char` variables, it would be helpful to transform the data types.
 
 ### Transform data types:
 ```{r, message=FALSE}
 library(lubridate)
-calls_2010_01_cleaned <- calls_2010_01 %>%
+calls_cleaned <- calls %>%
   mutate(closed_date = ymd_hms(closed_date)) %>%
   mutate(created_date = ymd_hms(created_date)) %>%
-  mutate(resolution_action_updated_date = ymd_hms(resolution_action_updated_date))
+  mutate(resolution_action_updated_date =
+           ymd_hms(resolution_action_updated_date))
 ```
 
 Now, take a look at it again.
 ```{r, message=FALSE}
-glimpse(calls_2010_01_cleaned)
+glimpse(calls_cleaned)
 ```
+
+```{r}
+calls_new <- calls_cleaned %>%
+  mutate(difference = (closed_date-created_date)/(60*60*24)) %>%
+  arrange(desc(difference)) %>%
+  filter(difference >= 0) %>%
+  filter(difference != "NA")
+```
+
+```{r}
+
+```
+
+
 
