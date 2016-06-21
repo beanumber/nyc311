@@ -15,11 +15,11 @@ Imports:
     DBI,
     dplyr,
     readr,
+    utils,
     lubridate
 Suggests:
     RSQLite,
     RMySQL,
-    RPostgreSQL,
     knitr,
     rmarkdown,
     testthat

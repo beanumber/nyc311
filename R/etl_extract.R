@@ -48,7 +48,7 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
 #' @export
 #' @importFrom readr write_delim read_csv
 #' @rdname etl_extract.etl_nyc311
-#' @importFrom lubridate ymd_hms
+#' @importFrom lubridate year month
 etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
                                      months = lubridate::month(Sys.Date()), ...) {
   #check if the year is valid
@@ -73,6 +73,7 @@ etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
 #' @export
 #' @importFrom DBI dbWriteTable
 #' @rdname etl_extract.etl_nyc311
+#' @importFrom lubridate year month
 #etl load
 etl_load.etl_nyc311 <- function(obj, schema = FALSE, years = lubridate::year(Sys.Date()), 
                                                      months = lubridate::month(Sys.Date()), ...) {
