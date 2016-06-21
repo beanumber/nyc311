@@ -122,7 +122,8 @@ agency_diff <- calls_new %>%
   group_by(agency_name) %>%
   summarise(number_hrs = mean(difference)/(60*60*24)) %>%
   arrange(number_hrs) 
-agency_diff
+agency_diff %>%
+  head(3)
 ```
 It seems that `New York City Police Department` is doing a great job on quickly solving problems. It take the policemen on average less than 10 minutes to solve each issue.
 
@@ -132,7 +133,8 @@ complaint_diff <- calls_new %>%
   group_by(complaint_type) %>%
   summarise(number_hrs = mean(difference)/(60*60*24)) %>%
   arrange(number_hrs) 
-complaint_diff
+complaint_diff %>%
+  head(3)
 ```
 As you can see from the list above, `Illegal Parking` takes the least time to resolve!
 
