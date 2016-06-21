@@ -33,7 +33,7 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
 
   #url
   base_url <- "https://data.cityofnewyork.us/resource/fhrw-4uyv.csv"
-  valid_months <- mutate(valid_months, src = paste0(base_url, 
+  valid_months <- mutate_(valid_months, src = ~paste0(base_url, 
                   "?$where=created_date%20between%20'", month_begin,
                   "'%20and%20'", month_end, "'&$limit=", format(n, scientific = FALSE)))
   src_length <- nrow(valid_months)
@@ -62,7 +62,7 @@ etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   
   #new dir
   new_dir <- attr(obj, "load_dir")
-  valid_months <- mutate(valid_months, new_lcl = paste0(new_dir, "/", basename(lcl)))
+  valid_months <- mutate_(valid_months, new_lcl = ~paste0(new_dir, "/", basename(lcl)))
   for (i in 1:src_length) {
     datafile <- readr::read_csv(valid_months$lcl[i])
     readr::write_delim(datafile, path = valid_months$new_lcl[i], delim = "|", na = "")
@@ -87,8 +87,8 @@ etl_load.etl_nyc311 <- function(obj, schema = FALSE, years = lubridate::year(Sys
                          lcl = paste0(dir, "/nyc311_", valid_months$year, "_", valid_months$month, ".csv"))
   #new dir
   new_dir <- attr(obj, "load_dir")
-  valid_months <- mutate(valid_months, 
-                         new_lcl = paste0(new_dir, "/", basename(lcl)))
+  valid_months <- mutate_(valid_months, 
+                         new_lcl = ~paste0(new_dir, "/", basename(lcl)))
   
   #table
   for (i in 1:src_length) {
