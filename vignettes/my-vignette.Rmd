@@ -87,16 +87,29 @@ Now, take a look at it again.
 glimpse(calls_cleaned)
 ```
 
+People might be interested in the number of days it takes for NYC Police Dpartemnt to resolve each case. We can get it by substracting `closed_date` from `created_date`.
 ```{r}
 calls_new <- calls_cleaned %>%
-  mutate(difference = (closed_date-created_date)/(60*60*24)) %>%
-  arrange(desc(difference)) %>%
-  filter(difference >= 0) %>%
-  filter(difference != "NA")
+  mutate(difference = as.numeric(closed_date-created_date))%>%
+  arrange(difference)
+```
+Here, we get the number of seconds it takes for NYC Police Dpartemnt to resolve each case under a colunmn called `difference`.
+
+Let's take a look at the first 5 rows of `calls_new`. 
+```{r}
+calls_new %>%
+  select(created_date, closed_date, difference) %>%
+  head(5)
 ```
 
-```{r}
+As you can see, some of the `difference` cells have negative entries. Since a case must be created before it is closed, NYC Police Deaprtment must have made some mistakes in the process of tracking and recording Phone Call information.
 
+
+Here I get the average number of days by dividing the number of secons by `24*60*60` seconds.
+```{r}
+calls_new <- calls_new %>%
+  filter(difference >= 0)
+#mean_hrs <- mean/(60*60*24) 
 ```
 
 
