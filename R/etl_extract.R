@@ -6,8 +6,8 @@
 #' @importFrom utils download.file
 #' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
-#' @param year a single year (2010 is the default)
-#' @param month a single month (1 is the default)
+#' @param years years that the issues have been created (the most recent year is the default)
+#' @param months months that the issues have been created (the most recent month is the default)
 #' @param n number of readings (1000000 is the default)
 #' @param ... arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.
 #' 
