@@ -87,13 +87,13 @@ Now, take a look at it again.
 glimpse(calls_cleaned)
 ```
 
-People might be interested in the number of days it takes for NYC Police Dpartemnt to resolve each case. We can get it by substracting `closed_date` from `created_date`.
+People might be interested in the number of days it takes for NYC agencies to resolve each case. We can get it by substracting `closed_date` from `created_date`.
 ```{r}
 calls_new <- calls_cleaned %>%
   mutate(difference = as.numeric(closed_date-created_date))%>%
   arrange(difference)
 ```
-Here, we get the number of seconds it takes for NYC Police Dpartemnt to resolve each case under a colunmn called `difference`.
+Here, we get the number of seconds it takes to resolve each case under a colunmn called `difference`.
 
 Let's take a look at the first 5 rows of `calls_new`. 
 ```{r}
@@ -102,15 +102,37 @@ calls_new %>%
   head(5)
 ```
 
-As you can see, some of the `difference` cells have negative entries. Since a case must be created before it is closed, NYC Police Deaprtment must have made some mistakes in the process of tracking and recording Phone Call information.
+As you can see, some of the `difference` cells have negative entries. Since a case must be created before it is closed, some of the NYC agencies must have made some mistakes in the process of tracking and recording Phone Call information.
 
-
-Here I get the average number of days by dividing the number of secons by `24*60*60` seconds.
+Therefore, we probably want to filter out the readings that have negative `difference` values. Then, I can the average number of days by dividing the average number of seconds by `24*60*60` seconds.
 ```{r}
 calls_new <- calls_new %>%
   filter(difference >= 0)
-#mean_hrs <- mean/(60*60*24) 
+difference <- as.numeric(calls_new$difference)
+mean_secs <-mean(difference)
+mean_secs
+mean_hrs <- mean_secs/(60*60*24) 
+mean_hrs
 ```
+It takes the agencies approximately 12 hours and 30 minutes to solve and close each issue.
 
+One thing that interests me is to see the difference in average number of hours it takes to solve each issue among multiple NYC departments.
+```{r}
+agency_diff <- calls_new %>%
+  group_by(agency_name) %>%
+  summarise(number_hrs = mean(difference)/(60*60*24)) %>%
+  arrange(number_hrs) 
+agency_diff
+```
+It seems that `New York City Police Department` is doing a great job on quickly solving problems. It take the policemen on average less than 10 minutes to solve each issue.
 
+Another thing that interests me is the difference in average number of hours it takes to solve each type of complaint. 
+```{r}
+complaint_diff <- calls_new %>%
+  group_by(complaint_type) %>%
+  summarise(number_hrs = mean(difference)/(60*60*24)) %>%
+  arrange(number_hrs) 
+complaint_diff
+```
+As you can see from the list above, `Illegal Parking` takes the least time to resolve!
 
