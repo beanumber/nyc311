@@ -6,3 +6,6 @@
 
 NYC Open Data Portal updates this dataset everyday, so ursers can get access to phone call information from 2010-01-10 to yesterday.
 
+This package uses the [etl](http://github.com/beanumber/etl) database framework.
+
+Please see [the vignette](https://github.com/beanumber/nyc311/blob/master/vignettes/my-vignette.Rmd) to get started.
