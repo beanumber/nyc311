@@ -27,7 +27,8 @@
 #'   collect()
 #'
 etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
-                                   months = lubridate::month(Sys.Date()), n = 1000000, ...) {
+                                   months = lubridate::month(Sys.Date()), 
+                                   n = 1000000, ...) {
   #check if the year is valid
   valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
 
@@ -39,9 +40,20 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   src_length <- nrow(valid_months)
   dir <- attr(obj, "raw_dir")
   valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_months$year, "_", valid_months$month, ".csv"))
-  for (i in 1:src_length) {
-    utils::download.file(valid_months$src[i], valid_months$lcl[i], ...)
-  }
+  
+  #first try
+  first_try<-tryCatch(
+    for (i in 1:src_length) {
+    utils::download.file(valid_months$src[i], valid_months$lcl[i])},
+           error = function(e){warning(e)},
+           finally = "download.file() fails... Trying the next method...")
+  
+  ifelse(class(first_try) == "NULL", print("Download succeed."), 
+         tryCatch(for (i in 1:src_length) {
+      utils::download.file(valid_months$src[i], valid_months$lcl[i],method = "curl")},
+           error = function(e){warning(e)},
+           finally = 'Trying method = "curl"')
+  )
   invisible(obj)
 }
 
