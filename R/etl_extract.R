@@ -43,17 +43,15 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   
   #first try
   first_try<-tryCatch(for (i in 1:src_length) {
-    utils::download.file(valid_months$src[i], valid_months$lcl[i])},
+    utils::download.file(valid_months$src[i], valid_months$lcl[i], 
+                         method = "curl")},
            error = function(e){warning(e)},
-           finally = "download.file() fails... Trying the next method...")
+           finally = 'method = "curl" fails')
   
   ifelse(class(first_try) == "NULL", print("Download succeeded."), 
          tryCatch(for (i in 1:src_length) {
-           utils::download.file(valid_months$src[i], valid_months$lcl[i], 
-                                method = "curl")},
-           error = function(e){warning(e)},
-           finally = 'Trying method = "curl"')
-      )
+           utils::download.file(valid_months$src[i], valid_months$lcl[i])},
+           error = function(e){warning(e)},finally = 'method = "auto" fails'))
   invisible(obj)
 }
 
