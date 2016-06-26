@@ -150,6 +150,10 @@ general_construction_location <- calls %>%
 ```
 
 ```{r}
+install.packages("leaflet",repos="http://cran.rstudio.com/")
+```
+
+```{r}
 library(leaflet)
 leaflet(data = general_construction_location) %>% 
   addTiles() %>%
