@@ -138,3 +138,21 @@ complaint_diff %>%
 ```
 As you can see from the list above, `Illegal Parking` takes the least time to resolve!
 
+```{r}
+complaint_type <- calls_new %>%
+  group_by(complaint_type) %>%
+  summarise(N=n()) %>%
+  arrange(desc(N)) 
+
+general_construction_location <- calls %>%
+  filter(complaint_type == "GENERAL CONSTRUCTION") %>%
+  select(latitude, longitude)
+```
+
+```{r}
+library(leaflet)
+leaflet(data = general_construction_location) %>% 
+  addTiles() %>%
+  addCircles()
+```
+
