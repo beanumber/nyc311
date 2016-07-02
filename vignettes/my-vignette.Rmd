@@ -154,7 +154,6 @@ general_construction_location <- calls %>%
 
 ```{r}
 if (require(leaflet)) { 
-  library(leaflet)
   leaflet(data = general_construction_location) %>% 
     addTiles() %>%
     addCircles()
