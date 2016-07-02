@@ -48,7 +48,7 @@ The `etl` function has three variables -- `object`, `dir`, and `db`.
 ```{r}
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 ```
-A SQLite database is created in the ``\\dir` that you specified. 
+A SQLite database is created in the `dir` that you specified. 
 
 ### Populate the database:
 ```{r, message=FALSE}
