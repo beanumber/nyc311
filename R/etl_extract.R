@@ -12,23 +12,6 @@
 #' @param n number of readings (1000000 is the default)
 #' @param ... arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.
 #' @details This function downloads NYC311 data from NYC311 OPEN DATA website for years and months specified.
-#' 
-#' @examples 
-#' \dontrun{
-#' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
-#' calls %>%
-#'   etl_extract(years = 2010:2011, months = 1:3, n =100) %>%
-#'   etl_transform(years = 2010:2011, months = 1:3) %>%
-#'   etl_load(years = 2010:2011, months = 1:3)
-#'
-#' calls %>%
-#'   tbl("calls") %>%
-#'   glimpse()
-#'   
-#' calls <- calls %>%
-#'   tbl("calls") %>%
-#'   collect()
-#' }
 etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
                                    months = lubridate::month(Sys.Date()), 
                                    n = 1000000, ...) {
