@@ -44,7 +44,7 @@ The `etl` function has three variables -- `object`, `dir`, and `db`.
 `db` is a connection to an SQL database. If you don't specify one, a SQLite database will be created for you in dir. MySQL or PostgreSQL database can also be created, but these require external configurations that can be hard to understand for people who are not familiar with SQL. 
 
 ## Examples
-### Create a etl Object:
+### Create an etl Object:
 ```{r}
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 ```
