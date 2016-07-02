@@ -1,4 +1,4 @@
-#' Using NYC311 data
+#' etl_extract
 #' @export
 #' @rdname etl_extract.etl_nyc311
 #' @method etl_extract etl_nyc311
