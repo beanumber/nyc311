@@ -46,14 +46,14 @@ The `etl` function has three variables -- `object`, `dir`, and `db`.
 ## Examples
 ### Create an etl Object:
 ```{r}
-calls <- etl("nyc311", dir = "~/Desktop/nyc311")
+calls <- etl("nyc311", dir)
 ```
 A SQLite database is created in the `dir` that you specified. 
 
 ### Populate the database:
 ```{r, message=FALSE}
 calls %>%
-  etl_extract(years = 2010:2011, months = 1:2, n = 1000) %>%
+  etl_extract(years = 2010:2011, months = 1:2, n = 100) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
   etl_load(years = 2010:2011, months = 1:2)
 ```
@@ -153,13 +153,11 @@ general_construction_location <- calls %>%
 ```
 
 ```{r}
-install.packages("leaflet",repos="http://cran.rstudio.com/")
-```
-
-```{r}
-library(leaflet)
-leaflet(data = general_construction_location) %>% 
-  addTiles() %>%
-  addCircles()
+if (require(leaflet)) { 
+  library(leaflet)
+  leaflet(data = general_construction_location) %>% 
+    addTiles() %>%
+    addCircles()
+}
 ```
 

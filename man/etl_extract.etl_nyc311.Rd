@@ -35,18 +35,6 @@ if your object is of type \code{\link[dplyr]{src_mysql}}, then make sure that
 the schema you specify here is written in MySQL (and not PostgreSQL). Please
 note that SQL syntax is not, in general, completely portable. Use with caution, as this may
 clobber any existing data you have in an existing database.}
-
-\item{years}{years that the issues have been created (the most recent year is the default)}
-
-\item{months}{months that the issues have been created (the most recent month is the default)}
-
-\item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
-
-\item{years}{years that the issues have been created (the most recent year is the default)}
-
-\item{months}{months that the issues have been created (the most recent month is the default)}
-
-\item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
 }
 \description{
 etl_extract
