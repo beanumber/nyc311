@@ -2,19 +2,10 @@
 % Please edit documentation in R/etl_extract.R
 \name{etl_extract.etl_nyc311}
 \alias{etl_extract.etl_nyc311}
-\alias{etl_load.etl_nyc311}
-\alias{etl_transform.etl_nyc311}
 \title{Using NYC311 data}
 \usage{
 \method{etl_extract}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
   months = lubridate::month(Sys.Date()), n = 1e+06, ...)
-
-\method{etl_transform}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
-  months = lubridate::month(Sys.Date()), ...)
-
-\method{etl_load}{etl_nyc311}(obj, schema = FALSE,
-  years = lubridate::year(Sys.Date()),
-  months = lubridate::month(Sys.Date()), ...)
 }
 \arguments{
 \item{obj}{an \code{\link{etl}} object}
@@ -26,20 +17,15 @@
 \item{n}{number of readings (1000000 is the default)}
 
 \item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
-
-\item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
-vector containing the schema itself. If \code{schema = TRUE}, then the built-in
-schema will be used. Note
-that the flavor of SQL in this file must match the type of the source. That is,
-if your object is of type \code{\link[dplyr]{src_mysql}}, then make sure that
-the schema you specify here is written in MySQL (and not PostgreSQL). Please
-note that SQL syntax is not, in general, completely portable. Use with caution, as this may
-clobber any existing data you have in an existing database.}
 }
 \description{
 Using NYC311 data
 }
+\details{
+This function downloads NYC311 data from NYC311 OPEN DATA website for years and months specified.
+}
 \examples{
+\dontrun{
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
   etl_extract(years = 2010:2011, months = 1:3, n =100) \%>\%
@@ -53,6 +39,6 @@ calls \%>\%
 calls <- calls \%>\%
   tbl("calls") \%>\%
   collect()
-
+}
 }
 
