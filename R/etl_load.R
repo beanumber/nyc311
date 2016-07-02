@@ -7,9 +7,6 @@
 #' @importFrom DBI dbWriteTable
 #' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
-#' @param years years that the issues have been created (the most recent year is the default)
-#' @param months months that the issues have been created (the most recent month is the default)
-#' @param ... arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.
 #' @details This function loads NYC311 data into a local database for years and months specified.
 #' @examples 
 #' \dontrun{

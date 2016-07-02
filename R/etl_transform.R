@@ -7,9 +7,6 @@
 #' @importFrom readr write_delim read_csv
 #' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
-#' @param years years that the issues have been created (the most recent year is the default)
-#' @param months months that the issues have been created (the most recent month is the default)
-#' @param ... arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.
 #' @details This function transforms NYC311 data for years and months specified.
 #' 
 etl_transform.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
