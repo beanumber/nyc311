@@ -1,7 +1,7 @@
 ---
 title: "NYC OpenData - NYC 311 Phone Call Information"
-author: "Wencong Li (liwencong1995@gmail.com)"
-date: "06/06/2016"
+author: "Wencong (Priscilla) Li <liwencong1995@gmail.com>"
+date: "07/01/2016"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using etl to connect to a MySQL database & Using NYC311 data}
@@ -14,10 +14,9 @@ library(knitr)
 opts_chunk$set(fig.width = 6, fig.height = 4)
 ```
 
-
 ## NYC 311 Open Data 
 
-The `nyc311` package provides a interface for urser who are not experts of SQL to create and maintain an SQL database of NYC 311 Phone Call information from NYC OpenData <https://nycopendata.socrata.com>. For `nyc311` package ursers, a reliable data storage directory is all they need . 
+The `nyc311` package provides a interface for urser who are not experts of SQL to create and maintain an SQL database of NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). For `nyc311` package ursers, a reliable data storage directory is all they need . 
 
 ## Get started:
 ### Install packages
@@ -35,25 +34,19 @@ library(nyc311)
 ```
 
 ### Database
-The `etl` function has three variables -- `object`, `dir`, and `db`.
-
-`object` is the etl object that you want to create. 
-
-`dir` is a local directory to store files. If you don't specify one, a temporary directory will be created for you.
-
-`db` is a connection to an SQL database. If you don't specify one, a SQLite database will be created for you in dir. MySQL or PostgreSQL database can also be created, but these require external configurations that can be hard to understand for people who are not familiar with SQL. 
+The `etl` function has three variables -- `object`, `dir`, and `db`. For more information about how to use the `etl` function, please read [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd).
 
 ## Examples
 ### Create an etl Object:
 ```{r}
-calls <- etl("nyc311", dir)
+calls <- etl("nyc311")
 ```
 A SQLite database is created in the `dir` that you specified. 
 
 ### Populate the database:
 ```{r, message=FALSE}
 calls %>%
-  etl_extract(years = 2010:2011, months = 1:2, n = 100) %>%
+  etl_extract(years = 2010:2011, months = 1:2, n = 1000) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
   etl_load(years = 2010:2011, months = 1:2)
 ```
@@ -159,4 +152,4 @@ if (require(leaflet)) {
     addCircles()
 }
 ```
-
+The blue dots shown in the map above represent NYC construction sites that had been complained about in the months specified.
