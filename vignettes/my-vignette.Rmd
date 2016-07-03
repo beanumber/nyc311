@@ -1,6 +1,6 @@
 ---
 title: "NYC OpenData - NYC 311 Phone Call Information"
-author: "Wencong (Priscilla) Li <liwencong1995@gmail.com>"
+author: "Wencong (Priscilla) Li"
 date: "07/01/2016"
 output: rmarkdown::html_vignette
 vignette: >
@@ -16,59 +16,77 @@ opts_chunk$set(fig.width = 6, fig.height = 4)
 
 ## NYC 311 Open Data 
 
-The `nyc311` package provides a interface for urser who are not experts of SQL to create and maintain an SQL database of NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). For `nyc311` package ursers, a reliable data storage directory is all they need . 
+The `nyc311` package provides an interface to NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
 
-## Get started:
+## Getting started:
 ### Install packages
-The `etl` package provides the generic framework for the `nyc311` package. To install the `nyc311` package, you must install etl first. Since the `nyc311`  packages currently live on GitHub and not on CRAN, you have to install it manually.
+
+The `etl` package provides the generic framework for the `nyc311` package. Since the `nyc311` package currently lives on GitHub and not on CRAN, you have to install it using `devtools`.
 
 ```{r, eval=FALSE, message=FALSE}
-install.packages("devtools", repos="http://cran.rstudio.com/")
+install.packages("devtools")
 devtools::install_github("beanumber/nyc311")
 ```
 
 ### Load the package
 This command loads both `etl` and `dplyr`.
-```{r, message=FALSE}
+```{r, message=TRUE}
 library(nyc311)
 ```
 
-### Database
-The `etl` function has three variables -- `object`, `dir`, and `db`. For more information about how to use the `etl` function, please read [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd).
-
 ## Examples
-### Create an etl Object:
+
+### Create an `etl` object:
+
+First, you must create an `etl` object. 
+
+The `etl` function has three key attributes -- `object`, `dir`, and `db`. 
+
 ```{r}
 calls <- etl("nyc311")
 ```
-A SQLite database is created in the `dir` that you specified. 
+By default, a [SQLite](http://www.github.com/rstats-db/RSQLite) database is created in a temporary directory. Please see the [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd) for more options, or see the built-in documentation. 
+
+```{r, eval=FALSE}
+help(etl)
+```
 
 ### Populate the database:
+
+First, we will populate the database with data from January and February of 2010 and 2011. These data will be downloaded directly from the NYC OpenData portal. 
+
 ```{r, message=FALSE}
 calls %>%
   etl_extract(years = 2010:2011, months = 1:2, n = 1000) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
   etl_load(years = 2010:2011, months = 1:2)
 ```
-The SQLite database that has just been created is populated with 100 readings from Janarary, 2010 NYC 311 data.
 
-Now you can pull the data that you are interested in into R Environment.
+The SQLite database that has just been created is populated with 100 calls from each of these four months. 
+
+```{r}
+calls
+```
+
+Now you can pull the data that you are interested in into your R Environment.
 ```{r, message=FALSE}
-calls <- calls %>%
+my_calls <- calls %>%
   tbl("calls") %>%
   collect()
 ```
 
 And take a look at it.
+
 ```{r, message=FALSE}
-glimpse(calls)
+glimpse(my_calls)
 ```
-Since all of the `Date` variables have been converted into `char` variables, it would be helpful to transform the data types.
+
+Since all of the `Date` variables have been converted into `character` vectors, it would be helpful to transform the data types.
 
 ### Transform data types:
 ```{r, message=FALSE}
 library(lubridate)
-calls_cleaned <- calls %>%
+calls_cleaned <- my_calls %>%
   mutate(closed_date = ymd_hms(closed_date)) %>%
   mutate(created_date = ymd_hms(created_date)) %>%
   mutate(resolution_action_updated_date =
@@ -81,7 +99,9 @@ glimpse(calls_cleaned)
 ```
 
 ### How long does it take for NYC agencies to solve an issue?
-People might be interested in the number of days it takes for NYC agencies to solve each case. We can get it by substracting `closed_date` from `created_date`.
+
+One obvious question is how many days it takes for NYC agencies to resolve each case. We can compute this by substracting `closed_date` from `created_date`.
+
 ```{r}
 calls_new <- calls_cleaned %>%
   mutate(difference = as.numeric(closed_date-created_date))%>%
@@ -97,39 +117,40 @@ calls_new %>%
 ```
 As you can see, some of the `difference` cells have negative entries. Since a case must be created before it is closed, some of the NYC agencies must have made some mistakes in the process of tracking and recording Phone Call information.
 
-Therefore, we probably want to filter out the readings that have negative `difference` values. Then, I can the average number of days by dividing the average number of seconds by `24*60*60` seconds.
+Therefore, we probably want to filter out the readings that have negative `difference` values. Then, we can the average number of days by dividing the average number of seconds by `24*60*60` seconds.
 ```{r}
-calls_new <- calls_new %>%
-  filter(difference >= 0)
-difference <- as.numeric(calls_new$difference)
-mean_secs <-mean(difference)
-mean_secs
-mean_hrs <- mean_secs/(60*60*24) 
-mean_hrs
+calls_new %>%
+  filter(difference >= 0) %>%
+  summarize(N = n(), mean_hrs = mean(difference) / (24 * 60 * 60))
 ```
-It takes the agencies approximately 12 hours and 30 minutes to solve and close an issue.
+
+For these calls, it took the agencies approximately 12 hours and 47 minutes to solve and close an issue.
 
 ### How long does it take for different NYC agencies to solve an issue?
-One thing that interests me is to see the difference in average number of hours it takes to solve an issue among multiple NYC departments.
+
+Does the average number of hours it takes to solve an issue vary among multiple NYC departments?
 ```{r}
 agency_diff <- calls_new %>%
+  filter(difference >= 0) %>%
   group_by(agency_name) %>%
-  summarise(number_hrs = mean(difference)/(60*60*24)) %>%
+  summarize(number_hrs = mean(difference) / (60 * 60 * 24)) %>%
   arrange(number_hrs) 
 agency_diff %>%
-  head(3)
+  head(10)
 ```
-It seems that `New York City Police Department` is doing a great job on quickly solving problems. It take the policemen on average less than 10 minutes to solve each issue.
+It seems that `New York City Police Department` is doing a great job on quickly solving problems. It takes the police on average less than 10 minutes to solve each issue.
 
 ### How long does it take for NYC agencies to solve differnt types of issue?
-Another thing that interests me is the difference in average number of hours it takes to solve each type of complaint. 
+
+Are there differences in the average number of hours it takes to solve each type of complaint?
 ```{r}
 complaint_diff <- calls_new %>%
+  filter(difference >= 0) %>%
   group_by(complaint_type) %>%
-  summarise(number_hrs = mean(difference)/(60*60*24)) %>%
+  summarize(number_hrs = mean(difference)/(60*60*24)) %>%
   arrange(number_hrs) 
 complaint_diff %>%
-  head(3)
+  head(10)
 ```
 As you can see from the list above, `Illegal Parking` takes the least time to resolve!
 
@@ -137,10 +158,10 @@ As you can see from the list above, `Illegal Parking` takes the least time to re
 ```{r}
 complaint_type <- calls_new %>%
   group_by(complaint_type) %>%
-  summarise(N=n()) %>%
+  summarize(N = n()) %>%
   arrange(desc(N)) 
 
-general_construction_location <- calls %>%
+general_construction_location <- my_calls %>%
   filter(complaint_type == "GENERAL CONSTRUCTION") %>%
   select(latitude, longitude)
 ```
