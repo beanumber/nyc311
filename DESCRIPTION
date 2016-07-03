@@ -1,13 +1,14 @@
 Package: nyc311
 Title: Access the NYC 311 Data
-Version: 0.0.0.9004
-Date: 2016-06-08
+Version: 0.0.1.9000
+Date: 2016-07-02
 Authors@R: c(
     person("Ben", "Baumer", email = "ben.baumer@gmail.com",
       role = c("aut", "cre")),
     person("Wencong", "Li", email = "liwencong1995@gmail.com", role = "aut"))
-Description: Provides access to the NYC 311 data, which contains information 
-    about calls to 311. These data are available from the NYC Open Data portal. 
+Description: Provides access to the NYC OpenData portal, which contains information 
+    about calls to 311. The 311 number provides New York City residents with information
+    and non-emergency response from various city agencies. 
 Depends:
     R (>= 3.2.3),
     etl
