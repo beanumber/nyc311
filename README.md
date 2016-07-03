@@ -4,7 +4,7 @@
 
 `nyc311` is a R package that contains information of calls to 311 from [NYC Open Data Portal](https://data.cityofnewyork.us/resource/fhrw-4uyv), and it allows ursers to upload multiple years of monthly phone call data to a local SQL database. 
 
-NYC Open Data Portal updates this dataset everyday, so ursers can get access to phone call information from 2010-01-10 to yesterday.
+NYC Open Data Portal updates phone call dataset everyday, so users can get access to phone call information from 2010-01-10 to yesterday.
 
 This package uses the [etl](http://github.com/beanumber/etl) database framework.
 
