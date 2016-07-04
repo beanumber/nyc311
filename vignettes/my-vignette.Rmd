@@ -16,7 +16,7 @@ opts_chunk$set(fig.width = 6, fig.height = 4)
 
 ## NYC 311 Open Data 
 
-The `nyc311` package provides an interface to NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
+[3-1-1](https://en.wikipedia.org/wiki/3-1-1) is a telephone number used in the United States for citizens to get access to non-emergency municipal services. The `nyc311` package provides an interface to NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
 
 ## Getting started:
 ### Install packages
@@ -174,3 +174,30 @@ if (require(leaflet)) {
 }
 ```
 The blue dots shown in the map above represent NYC construction sites that had been complained about in the months specified.
+
+
+
+## A More specific Examples
+The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the types of issue happened on March 17, 2014.
+
+```{r}
+calls2 <- etl("nyc311")
+calls2 %>%
+  etl_extract(years = 2014, months = 3 ) %>%
+  etl_transform(years = 2014, months = 3) %>%
+  etl_load(years = 2014, months = 3)
+
+calls2 <- calls2 %>%
+  tbl("calls") %>%
+  collect()
+
+nyc_2014_parade <- calls2 %>%
+  filter(city == "NEW YORK") %>%
+  group_by(complaint_type) %>%
+  summarise(N = n()) %>%
+  arrange(desc(N))
+
+head(nyc_2014_parade,5)
+```
+
+The 2014 St. Patrick’s Day NYC Parade took place in New York City, so I first filtered all the issues that were reported in New York. As shown in the table above, `Noise - Residential` is the most common `complaint_type` on that day. This makes sense, since the parade was loud and has lasted for a along time. 
