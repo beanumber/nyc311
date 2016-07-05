@@ -7,6 +7,7 @@
 #' @importFrom DBI dbWriteTable
 #' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
+#' @param schema schema
 #' @details This function loads NYC311 data into a local database for years and months specified.
 #' @examples 
 #' \dontrun{
