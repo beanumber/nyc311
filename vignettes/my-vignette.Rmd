@@ -44,6 +44,7 @@ The `etl` function has three key attributes -- `object`, `dir`, and `db`.
 
 ```{r}
 calls <- etl("nyc311")
+summary(calls)
 ```
 By default, a [SQLite](http://www.github.com/rstats-db/RSQLite) database is created in a temporary directory. Please see the [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd) for more options, or see the built-in documentation. 
 
@@ -100,7 +101,7 @@ glimpse(calls_cleaned)
 
 ### How long does it take for NYC agencies to solve an issue?
 
-One obvious question is how many days it takes for NYC agencies to resolve each case. We can compute this by substracting `closed_date` from `created_date`.
+One obvious question is how many days it takes for NYC agencies to resolve each case. We can compute this by subtracting `closed_date` from `created_date`.
 
 ```{r}
 calls_new <- calls_cleaned %>%
@@ -155,6 +156,9 @@ complaint_diff %>%
 As you can see from the list above, `Illegal Parking` takes the least time to resolve!
 
 ### Where did `General Construction` issues occur in NYC?
+
+Most of the calls have a latitude and longitude coordinate record, so we can contextualize these observations using a map. In this example, we illustrate where general construction issues occurred. 
+
 ```{r}
 complaint_type <- calls_new %>%
   group_by(complaint_type) %>%
@@ -178,7 +182,7 @@ The blue dots shown in the map above represent NYC construction sites that had b
 
 
 ## A More specific Examples
-The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the types of issue happened on March 17, 2014.
+The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the types of issues that happened on March 17, 2014.
 
 ```{r}
 calls2 <- etl("nyc311")
@@ -200,4 +204,4 @@ nyc_2014_parade <- calls2 %>%
 head(nyc_2014_parade,5)
 ```
 
-The 2014 St. Patrick’s Day NYC Parade took place in New York City, so I first filtered all the issues that were reported in New York. As shown in the table above, `Noise - Residential` is the most common `complaint_type` on that day. This makes sense, since the parade was loud and has lasted for a along time. 
+The 2014 St. Patrick’s Day NYC Parade took place in Manhattan (`NEW YORK` country), so we restrict our attention to issues that were reported in New York. As shown in the table above, `Noise - Residential` is the most common `complaint_type` on that day. This makes sense, since the parade was loud and has lasted for a along time. 
