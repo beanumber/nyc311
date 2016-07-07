@@ -7,7 +7,6 @@
 #' @importFrom DBI dbWriteTable
 #' @importFrom lubridate year month
 #' @inheritParams etl::etl_extract
-#' @param schema schema
 #' @details This function loads NYC311 data into a local database for years and months specified.
 #' @examples 
 #' \dontrun{
@@ -25,7 +24,7 @@
 #'   tbl("calls") %>%
 #'   collect()
 #' }
-etl_load.etl_nyc311 <- function(obj, schema = FALSE, years = lubridate::year(Sys.Date()), 
+etl_load.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
                                 months = lubridate::month(Sys.Date()), ...) {
   #check if the year is valid
   valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
