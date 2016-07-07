@@ -182,12 +182,12 @@ The blue dots shown in the map above represent NYC construction sites that had b
 
 
 ## A More specific Examples
-The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the types of issues that happened on March 17, 2014.
+The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the locations of the first 100 issues happened on March 17, 2014.
 
 ```{r}
 calls2 <- etl("nyc311")
 calls2 %>%
-  etl_extract(years = 2014, months = 3 ) %>%
+  etl_extract(years = 2014, months = 3, n = 100 ) %>%
   etl_transform(years = 2014, months = 3) %>%
   etl_load(years = 2014, months = 3)
 
@@ -195,13 +195,18 @@ calls2 <- calls2 %>%
   tbl("calls") %>%
   collect()
 
-nyc_2014_parade <- calls2 %>%
-  filter(city == "NEW YORK") %>%
-  group_by(complaint_type) %>%
-  summarise(N = n()) %>%
-  arrange(desc(N))
+St.Patrick <- calls2 %>%
+  select(latitude, longitude, complaint_type)
 
-head(nyc_2014_parade,5)
+head(St.Patrick)
+
+if (require(leaflet)) { 
+  leaflet(data = St.Patrick) %>% 
+    addTiles() %>%
+    addCircles()
+}
 ```
 
-The 2014 St. Patrick’s Day NYC Parade took place in Manhattan (`NEW YORK` country), so we restrict our attention to issues that were reported in New York. As shown in the table above, `Noise - Residential` is the most common `complaint_type` on that day. This makes sense, since the parade was loud and has lasted for a along time. 
+As shown in the map above, most of the first 100 calls reported issues happened in New York City. This makes sense, since the 2014 St. Patrick’s Day NYC Parade took place in Manhattan (`NEW YORK` country). 
+
+
