@@ -58,7 +58,7 @@ First, we will populate the database with data from January and February of 2010
 
 ```{r, message=FALSE}
 calls %>%
-  etl_extract(years = 2010:2011, months = 1:2, n = 1000) %>%
+  etl_extract(years = 2010:2011, months = 1:2, num_calls = 100) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
   etl_load(years = 2010:2011, months = 1:2)
 ```
@@ -187,7 +187,7 @@ The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades tha
 ```{r}
 calls2 <- etl("nyc311")
 calls2 %>%
-  etl_extract(years = 2014, months = 3, n = 100 ) %>%
+  etl_extract(years = 2014, months = 3, num_calls = 100 ) %>%
   etl_transform(years = 2014, months = 3) %>%
   etl_load(years = 2014, months = 3)
 
@@ -208,5 +208,3 @@ if (require(leaflet)) {
 ```
 
 As shown in the map above, most of the first 100 calls reported issues happened in New York City. This makes sense, since the 2014 St. Patrick’s Day NYC Parade took place in Manhattan (`NEW YORK` country). 
-
-
