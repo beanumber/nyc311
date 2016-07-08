@@ -178,10 +178,8 @@ if (require(leaflet)) {
 ```
 The blue dots shown in the map above represent NYC construction sites that had been complained about in the months specified.
 
-
-
 ## A More specific Examples
-The 2014 New York  is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the locations of the first 100 issues happened on March 17, 2014.
+The 2014 New York City New Year Celebration took place in Times Square, and let's take a look at what the issue that annoys people living in New York City the most is on New Year's Day.
 
 ```{r}
 calls2 <- etl("nyc311")
@@ -193,17 +191,22 @@ calls2 %>%
 calls2 <- calls2 %>%
   tbl("calls") %>%
   collect()
+```
 
-St.Patrick <- calls2 %>%
+```{r}
+new_year <- calls2 %>%
   select(latitude, longitude, complaint_type)
 
-head(St.Patrick)
-
+new_year %>%
+  group_by(complaint_type) %>%
+  summarise(N = n()) %>%
+  arrange(desc(N)) %>%
+  head(3)
+  
 if (require(leaflet)) { 
-  leaflet(data = St.Patrick) %>% 
+  leaflet(data = new_year) %>% 
     addTiles() %>%
     addCircles()
 }
 ```
-
-As shown in the map above, most of the first 100 calls reported issues happened in New York City. This makes sense, since the 2014 St. Patrick’s Day NYC Parade took place in Manhattan (`NEW YORK` country). 
+As shown in the table and the map above, most of the first 100 calls reported `HEATING` problems happened `NEW YORK` country. 
