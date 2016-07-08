@@ -9,8 +9,7 @@
 \method{etl_extract}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
   months = lubridate::month(Sys.Date()), num_calls = 1e+06, ...)
 
-\method{etl_load}{etl_nyc311}(obj, schema = FALSE,
-  years = lubridate::year(Sys.Date()),
+\method{etl_load}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
   months = lubridate::month(Sys.Date()), ...)
 
 \method{etl_transform}{etl_nyc311}(obj, years = lubridate::year(Sys.Date()),
@@ -26,15 +25,6 @@
 \item{num_calls}{number of readings (1000000 is the default)}
 
 \item{...}{arguments passed to \code{\link{download.file}}. Set method as "curl" for Linux system, and as default for Windows and Mac OS X systems.}
-
-\item{schema}{Either a logical, a filename pointing to SQL schema file, or a character
-vector containing the schema itself. If \code{schema = TRUE}, then the built-in
-schema will be used. Note
-that the flavor of SQL in this file must match the type of the source. That is,
-if your object is of type \code{\link[dplyr]{src_mysql}}, then make sure that
-the schema you specify here is written in MySQL (and not PostgreSQL). Please
-note that SQL syntax is not, in general, completely portable. Use with caution, as this may
-clobber any existing data you have in an existing database.}
 }
 \description{
 etl_extract

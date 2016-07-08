@@ -182,14 +182,14 @@ The blue dots shown in the map above represent NYC construction sites that had b
 
 
 ## A More specific Examples
-The 2014 St. Patrick’s Day NYC Parade is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the locations of the first 100 issues happened on March 17, 2014.
+The 2014 New York  is one of the Top 10 largest parades that have ever happened in New York City, so let's take a look at the locations of the first 100 issues happened on March 17, 2014.
 
 ```{r}
 calls2 <- etl("nyc311")
 calls2 %>%
-  etl_extract(years = 2014, months = 3, num_calls = 100 ) %>%
-  etl_transform(years = 2014, months = 3) %>%
-  etl_load(years = 2014, months = 3)
+  etl_extract(years = 2014, months = 1, num_calls = 100 ) %>%
+  etl_transform(years = 2014, months = 1) %>%
+  etl_load(years = 2014, months = 1)
 
 calls2 <- calls2 %>%
   tbl("calls") %>%
