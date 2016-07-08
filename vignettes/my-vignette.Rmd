@@ -125,7 +125,7 @@ calls_new %>%
   summarize(N = n(), mean_hrs = mean(difference) / (24 * 60 * 60))
 ```
 
-For these calls, it took the agencies approximately 12 hours and 47 minutes to solve and close an issue.
+For these calls, it took the agencies approximately 13 hours and 24 minutes to solve and close an issue.
 
 ### How long does it take for different NYC agencies to solve an issue?
 
@@ -136,10 +136,9 @@ agency_diff <- calls_new %>%
   group_by(agency_name) %>%
   summarize(number_hrs = mean(difference) / (60 * 60 * 24)) %>%
   arrange(number_hrs) 
-agency_diff %>%
-  head(10)
+agency_diff
 ```
-It seems that `New York City Police Department` is doing a great job on quickly solving problems. It takes the police on average less than 10 minutes to solve each issue.
+It seems that `Department of Housing Preservation and Development` is doing a better job on quickly solving problems. It takes it on average less than 13 minutes to solve each issue.
 
 ### How long does it take for NYC agencies to solve differnt types of issue?
 
@@ -153,7 +152,7 @@ complaint_diff <- calls_new %>%
 complaint_diff %>%
   head(10)
 ```
-As you can see from the list above, `Illegal Parking` takes the least time to resolve!
+As you can see from the list above, `HEATING` takes the least time to resolve!
 
 ### Where did `General Construction` issues occur in NYC?
 
