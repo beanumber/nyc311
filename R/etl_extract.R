@@ -34,7 +34,7 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
            error = function(e){warning(e)},
            finally = 'method = "curl" fails')
   
-  ifelse(class(first_try) == "NULL", print("Download succeeded."), 
+  ifelse(class(first_try) == "integer", print("Download succeeded."), 
          tryCatch(mapply(FUN = utils::download.file, valid_months$src, 
                          valid_months$lcl, MoreArgs = list(method = "auto")),
            error = function(e){warning(e)},finally = 'method = "auto" fails'))
