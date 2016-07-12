@@ -23,20 +23,20 @@ etl_extract.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   valid_months <- mutate_(valid_months, src = ~paste0(base_url, 
                   "?$where=created_date%20between%20'", month_begin,
                   "'%20and%20'", month_end, "'&$limit=", format(num_calls, scientific = FALSE)))
-  src_length <- nrow(valid_months)
   dir <- attr(obj, "raw_dir")
   valid_months <- mutate(valid_months, lcl = paste0(dir, "/nyc311_", valid_months$year, "_", valid_months$month, ".csv"))
-  
+
   #first try
   first_try<-tryCatch(
-    mapply(FUN = utils::download.file, valid_months$src, 
-           valid_months$lcl, MoreArgs = list(method = "curl")),
-           error = function(e){warning(e)},
-           finally = 'method = "curl" fails')
+    smart_download(obj, src = valid_months$src, 
+                   new_filenames = basename(valid_months$lcl), 
+                   method = "curl", quiet = FALSE),
+    error = function(e){warning(e)},finally = 'method = "curl" fails')
   
-  ifelse(class(first_try) == "integer", print("Download succeeded."), 
-         tryCatch(mapply(FUN = utils::download.file, valid_months$src, 
-                         valid_months$lcl, MoreArgs = list(method = "auto")),
+  ifelse(first_try[[1]] == 0, print("Download succeeded."), 
+         tryCatch(smart_download(obj, src = valid_months$src, 
+                                 new_filenames = basename(valid_months$lcl), 
+                                 method = "auto", quiet = FALSE),
            error = function(e){warning(e)},finally = 'method = "auto" fails'))
   invisible(obj)
 }
