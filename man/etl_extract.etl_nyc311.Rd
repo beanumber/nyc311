@@ -44,15 +44,14 @@ This function transforms NYC311 data for years and months specified.
 \dontrun{
 calls <- etl("nyc311", dir = "~/Desktop/nyc311")
 calls \%>\%
-  etl_extract(years = 2010:2011, months = 1:3, num_calls =10) \%>\%
-  etl_transform(years = 2010:2011, months = 1:3) \%>\%
-  etl_load(years = 2010:2011, months = 1:3)
+  etl_init() \%>\%
+  etl_update(years = 2010:2011, months = 1:3, num_calls = 10, skip = 0)
 
 calls \%>\%
   tbl("calls") \%>\%
   glimpse()
   
-calls <- calls \%>\%
+calls_df <- calls \%>\%
   tbl("calls") \%>\%
   collect()
 }

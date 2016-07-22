@@ -10,21 +10,20 @@
 #' @details This function loads NYC311 data into a local database for years and months specified.
 #' @examples 
 #' \dontrun{
-#' calls <- etl("nyc311", dir = "~/Desktop/nyc311")
+#' calls <- etl("nyc311")
 #' calls %>%
-#'   etl_extract(years = 2010:2011, months = 1:3, num_calls =10) %>%
-#'   etl_transform(years = 2010:2011, months = 1:3) %>%
-#'   etl_load(years = 2010:2011, months = 1:3)
+#'   etl_init() %>%
+#'   etl_update(years = 2010:2011, months = 1:3, num_calls = 100)
 #'
 #' calls %>%
 #'   tbl("calls") %>%
 #'   glimpse()
 #'   
-#' calls <- calls %>%
+#' calls_df <- calls %>%
 #'   tbl("calls") %>%
 #'   collect()
 #' }
-etl_load.etl_nyc311 <- function(obj,years = lubridate::year(Sys.Date()), 
+etl_load.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()), 
                                 months = lubridate::month(Sys.Date()), ...) {
   #check if the year is valid
   valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
@@ -39,10 +38,20 @@ etl_load.etl_nyc311 <- function(obj,years = lubridate::year(Sys.Date()),
   valid_months <- mutate_(valid_months, 
                           new_lcl = ~paste0(new_dir, "/", basename(lcl)))
   
-  #table
-  for (i in 1:src_length) {
-    DBI::dbWriteTable(conn = obj$con, name = "calls", value = valid_months$new_lcl[i], append = TRUE, sep = "|", ...)
+  # dots <- list(...)
+  # cat(str(dots))
+  # new_dots <- dots[!grepl("num_calls", names(dots))]
+  # cat(str(new_dots))
+  
+  write_data <- function(..., num_calls) {
+    lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
+           name = "calls", append = TRUE, sep = "|", ... = ...)
   }
+  write_data(...)
+  
+  #table
   message("Writing NYC311 data to the database...")
+#  lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
+#         name = "calls", append = TRUE, sep = "|")
   invisible(obj)
 }
