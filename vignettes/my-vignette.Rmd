@@ -178,15 +178,15 @@ if (require(leaflet)) {
 ```
 The blue dots shown in the map above represent NYC construction sites that had been complained about in the months specified.
 
-## A More specific Examples
+## More Examples: 2014 New York City New Year Celebration
 The 2014 New York City New Year Celebration took place in Times Square, and let's take a look at what the issue that annoys people living in New York City the most is on New Year's Day.
+
+Here, I am using `etl_update` which is equivalent to a combination of `etl_extract, etl_transform, and etl_load`. Instead of having different arguments for each one of the three functions, you can enter all arguments needed in `etl_update`.
 
 ```{r}
 calls2 <- etl("nyc311")
 calls2 %>%
-  etl_extract(years = 2014, months = 1, num_calls = 100 ) %>%
-  etl_transform(years = 2014, months = 1) %>%
-  etl_load(years = 2014, months = 1)
+  etl_update(years = 2014, months = 1, num_calls = 100 )
 
 calls2 <- calls2 %>%
   tbl("calls") %>%
