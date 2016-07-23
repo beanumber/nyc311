@@ -42,10 +42,10 @@ This function transforms NYC311 data for years and months specified.
 }
 \examples{
 \dontrun{
-calls <- etl("nyc311", dir = "~/Desktop/nyc311")
+calls <- etl("nyc311")
 calls \%>\%
   etl_init() \%>\%
-  etl_update(years = 2010:2011, months = 1:3, num_calls = 10, skip = 0)
+  etl_update(years = 2010:2011, months = 1:3, num_calls = 100)
 
 calls \%>\%
   tbl("calls") \%>\%

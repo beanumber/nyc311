@@ -37,12 +37,7 @@ etl_load.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   new_dir <- attr(obj, "load_dir")
   valid_months <- mutate_(valid_months, 
                           new_lcl = ~paste0(new_dir, "/", basename(lcl)))
-  
-  # dots <- list(...)
-  # cat(str(dots))
-  # new_dots <- dots[!grepl("num_calls", names(dots))]
-  # cat(str(new_dots))
-  
+
   write_data <- function(..., num_calls) {
     lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
            name = "calls", append = TRUE, sep = "|", ... = ...)
@@ -51,7 +46,5 @@ etl_load.etl_nyc311 <- function(obj, years = lubridate::year(Sys.Date()),
   
   #table
   message("Writing NYC311 data to the database...")
-#  lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
-#         name = "calls", append = TRUE, sep = "|")
   invisible(obj)
 }
