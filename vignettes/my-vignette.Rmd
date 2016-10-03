@@ -210,3 +210,14 @@ if (require(leaflet)) {
 }
 ```
 As shown in the table and the map above, most of the first 100 calls reported `HEATING` problems happened `NEW YORK` country. 
+
+
+###An Interesting Article about NYC311
+Steven Johnson wrote an interesting article about NYC311 dataset, and this article can be found by clicking the link below.
+
+Steven Johnson, ["What A Hundred Million Calls to 311 Reveal About New York”](http://www.wired.com/magazine/2010/11/ff_311_new_york/all/1) November 10, 2010.
+
+Steven started his article by introducing the "new aroma" event which took place in New York City about 15 years ago. The city officials realized that the NYC311 phone call tracking system data actually provided clues about where the arma was from.
+
+By using this packge to analyze NYC311 data, you will be able to find more interesting "clues" about what is happening in New York City.
+
