@@ -116,3 +116,17 @@ years <- 2010:2011
 months <- 1:3
 n <- 100
 obj <- calls
+
+
+
+#--------------------------------------------------------------------------
+years <- 2011
+months <- 1
+num_calls = 1000000
+obj <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
+download.file(valid_months$src[[1]], valid_months$lcl[[1]])
+src_length <- 1
+lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
+       name = "calls", append = TRUE, sep = "~")
+
+
