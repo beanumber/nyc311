@@ -122,11 +122,41 @@ obj <- calls
 #--------------------------------------------------------------------------
 years <- 2011
 months <- 1
-num_calls = 1000000
+num_calls = 100
 obj <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
 download.file(valid_months$src[[1]], valid_months$lcl[[1]])
 src_length <- 1
 lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
-       name = "calls", append = TRUE, sep = "~")
+       name = "calls", append = TRUE, sep = "|")
 
+obj %>%
+  etl_extract(2011,1,100) %>%
+  etl_transform(2011,1) %>%
+  etl_load(2011,1)
+
+#------------------------------------------------------------------
+install.packages("devtools")
+R.Version()
+tempdir()
+
+require(etl)
+require(dplyr)
+#SQLite
+x <- data.frame(variable_1 = c("1,1,1", "2,2,2"), variable_2 = c("a,b", "c,d"))
+con_data = dbConnect(RSQLite::SQLite(), dbname="mysqlite")
+dbWriteTable(con_data, x, name="data1",append=TRUE)
+
+#MySQL
+#system("mysql -e 'CREATE DATABASE IF NOT EXISTS testdata;'")
+db <- src_mysql("testdata", )
+db <- src_mysql(dbname = "testdata", host = "localhost",
+                user = "WencongLi",password = "P320718")
+db
+y <- write.csv(x, quote=TRUE)
+#y NULL
+con_data_2 = dbConnect(RMySQL::MySQL(), username = "WencongLi",
+                       password = "P320718", 
+                       host = "localhost",
+                       dbname="testdata")
+dbWriteTable(con_data_2, x, name = "data2")
 
