@@ -160,3 +160,12 @@ con_data_2 = dbConnect(RMySQL::MySQL(), username = "WencongLi",
                        dbname="testdata")
 dbWriteTable(con_data_2, x, name = "data2")
 
+#-----------------------------------------------------------------
+#MySQL
+
+#mysql -u WencongLi -p
+#P320718
+#select now();
+#create databases nyc311;
+#show databases;
+
