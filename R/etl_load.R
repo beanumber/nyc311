@@ -10,7 +10,10 @@
 #' @details This function loads NYC311 data into a local database for years and months specified.
 #' @examples 
 #' \dontrun{
-#' calls <- etl("nyc311")
+#' calls <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
+#' calls %>%
+#'  etl_extract(years = 2010:2011, months = 1:3, num_calls = 100)
+#'  
 #' calls %>%
 #'   etl_init() %>%
 #'   etl_update(years = 2010:2011, months = 1:3, num_calls = 100)

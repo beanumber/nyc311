@@ -121,7 +121,7 @@ obj <- calls
 
 #--------------------------------------------------------------------------
 years <- 2011
-months <- 1
+months <- 2
 num_calls = 100
 obj <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
 download.file(valid_months$src[[1]], valid_months$lcl[[1]])
