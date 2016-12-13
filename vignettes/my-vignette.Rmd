@@ -1,7 +1,7 @@
 ---
 title: "NYC OpenData - NYC 311 Phone Call Information"
 author: "Wencong (Priscilla) Li"
-date: "07/01/2016"
+date: "12/13/2016"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using etl to connect to a MySQL database & Using NYC311 data}
@@ -221,3 +221,5 @@ Steven started his article by introducing the "new aroma" event which took place
 
 By using this packge to analyze NYC311 data, you will be able to find more interesting "clues" about what is happening in New York City.
 
+###Acknowledgement 
+I want to thank Benjamin Baumer,  Professor at Smith College, for teaching me all the techniques that I need for the completion of this package. 
