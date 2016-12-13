@@ -111,6 +111,7 @@ calls %>%
 install.packages("devtools")
 devtools::install_github("beanumber/etl")
 library(etl)
+library(dplyr)
 valid_months <- etl::valid_year_month(years, months, begin = "2010-01-01")
 years <- 2010:2011
 months <- 1:3
@@ -120,8 +121,8 @@ obj <- calls
 
 
 #--------------------------------------------------------------------------
-years <- 2011
-months <- 2
+years <- 2015
+months <- 1:12
 num_calls = 100
 obj <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
 download.file(valid_months$src[[1]], valid_months$lcl[[1]])
@@ -130,10 +131,13 @@ lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con,
        name = "calls", append = TRUE, sep = "|")
 
 obj %>%
-  etl_extract(2011,1,100) %>%
+  etl_extract(2013,1,100) %>%
   etl_transform(2011,1) %>%
   etl_load(2011,1)
 
+
+download.file("https://data.cityofnewyork.us/resource/fhrw-4uyv.csv?$where=created_date%20between%20'2013-02-01'%20and%20'2013-02-28'&$limit=100",
+              "/Users/Priscilla/Desktop/nyc311/raw/nyc311_2013_2.csv")
 #------------------------------------------------------------------
 install.packages("devtools")
 R.Version()
@@ -169,3 +173,5 @@ dbWriteTable(con_data_2, x, name = "data2")
 #create databases nyc311;
 #show databases;
 
+
+nyc311 <- table("nyc311")
