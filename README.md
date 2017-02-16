@@ -1,6 +1,6 @@
-[![Travis-CI Build Status](https://travis-ci.org/beanumber/nyc311.svg?branch=master)](https://travis-ci.org/beanumber/nyc311)
+# NYC311 (Phone Call Tracking System Data)
 
-# nyc311
+[![Travis-CI Build Status](https://travis-ci.org/beanumber/nyc311.svg?branch=master)](https://travis-ci.org/beanumber/nyc311)
 
 `nyc311` is a R package based on ETL framework to interface with NYC311 Phone call tracking system data. This package contains information collected from [NYC Open Data Portal](https://data.cityofnewyork.us/resource/fhrw-4uyv), and it allows users to download multiple years of phone call data to a local SQL database. 
 
