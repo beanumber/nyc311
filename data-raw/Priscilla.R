@@ -124,18 +124,23 @@ obj <- calls
 years <- 2015
 months <- 1:12
 num_calls = 100
-obj <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
+nyc311 <- etl("nyc311", dir = "/Users/Priscilla/Desktop/nyc311")
 download.file(valid_months$src[[1]], valid_months$lcl[[1]])
 src_length <- 1
 lapply(valid_months$new_lcl, FUN = DBI::dbWriteTable, conn = obj$con, 
        name = "calls", append = TRUE, sep = "|")
 
-obj %>%
+nyc311 %>%
   etl_extract(2013,1,100) %>%
-  etl_transform(2011,1) %>%
-  etl_load(2011,1)
+  etl_transform(2013,1) %>%
+  etl_load(2013,1)
+nyc311
 
+my_calls <- nyc311 %>%
+  tbl("calls") %>%
+  collect()
 
+summary(nyc311)
 download.file("https://data.cityofnewyork.us/resource/fhrw-4uyv.csv?$where=created_date%20between%20'2013-02-01'%20and%20'2013-02-28'&$limit=100",
               "/Users/Priscilla/Desktop/nyc311/raw/nyc311_2013_2.csv")
 #------------------------------------------------------------------

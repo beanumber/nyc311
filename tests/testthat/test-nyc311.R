@@ -28,7 +28,7 @@ test_that("mysql works", {
                     user = NULL, password = NULL)
     expect_s3_class(calls_mysql <- etl("nyc311", db = db, dir = test_dir), "src_mysql")
     expect_message(calls_mysql %>% etl_init(), "Could not find")
-    expect_message(calls_mysql %>% etl_update(years = 2011, months = 1, num_calls = 100), "Writing NYC311 data")
+    expect_message(calls_mysql %>% etl_update(years = 2013, months = 1, num_calls = 100), "Writing NYC311 data")
     expect_output(print(calls_mysql), "calls")
     expect_equal(calls_mysql %>% tbl("calls") %>% collect(n = Inf) %>% nrow(), 100)
   }
