@@ -222,4 +222,4 @@ Steven started his article by introducing the "new aroma" event which took place
 By using this packge to analyze NYC311 data, you will be able to find more interesting "clues" about what is happening in New York City.
 
 ###Acknowledgement 
-I want to thank Benjamin Baumer,  Professor at Smith College, for teaching me all the techniques that I need for the completion of this package. 
+I want to thank Professor [Benjamin Baumer](https://www.smith.edu/academics/faculty/ben-baumer), Assistant Professor in Statistical & Data Sciences at Smith College, for teaching me all the techniques that I need for the completion of this package. 
