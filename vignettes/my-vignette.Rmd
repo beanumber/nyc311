@@ -1,6 +1,6 @@
 ---
 title: "NYC OpenData - NYC 311 Phone Call Information"
-author: "Wencong (Priscilla) Li"
+author: "Wencong (Priscilla) Li: liwencong1995@gmail.com - Smith College '18"
 date: "12/13/2016"
 output: rmarkdown::html_vignette
 vignette: >
@@ -33,6 +33,8 @@ This command loads both `etl` and `dplyr`.
 ```{r, message=TRUE}
 library(nyc311)
 ```
+
+Note:In order to initialize an etl object above using a `src_sqlite` database connection, you need to have [`RSQLite`](https://cran.r-project.org/web/packages/RSQLite/index.html) installed in your `System Library`.
 
 ## Examples
 
