@@ -225,3 +225,5 @@ By using this packge to analyze NYC311 data, you will be able to find more inter
 
 ###Acknowledgement 
 I want to thank Professor [Benjamin Baumer](https://www.smith.edu/academics/faculty/ben-baumer), Assistant Professor in Statistical & Data Sciences at Smith College, for teaching me all the techniques that I need for the completion of this package. 
+
+I also want to thank Shuqi Mao, Connie Zhang, and Crystal Zang for helping with the testing of this package. They gave me very useful comments on how to make this vignette more straightforward. 
