@@ -6,13 +6,13 @@
 
 NYC Open Data Portal updates NYC311 dataset everyday, so users can get access to phone call information from 2010-01-10 to yesterday. This package uses the [ETL](http://github.com/beanumber/etl) framework.
 
-## To install
+## To install the package
 ```{r, eval=FALSE, message=FALSE}
 install.packages("devtools")
 devtools::install_github("beanumber/nyc311")
 ```
 
-## Load the package
+## To load the package
 This command loads both `etl` and `dplyr`.
 ```{r, message=TRUE}
 library(nyc311)
@@ -25,14 +25,12 @@ summary(calls)
 ```
 
 ### Populate the database:
-
 ```{r, message=FALSE}
 calls %>%
   etl_extract(years = 2010:2011, months = 1:2, num_calls = 100) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
   etl_load(years = 2010:2011, months = 1:2)
 ```
-Please read [the vignette](https://github.com/beanumber/nyc311/blob/master/vignettes/my-vignette.Rmd) to get started.
 
 Now you can pull the data that you are interested in into your R Environment.
 ```{r, message=FALSE}
@@ -42,8 +40,8 @@ my_calls <- calls %>%
 ```
 
 And take a look at it.
-
 ```{r, message=FALSE}
 glimpse(my_calls)
 ```
 
+Please read [the vignette](https://github.com/beanumber/nyc311/blob/master/vignettes/my-vignette.Rmd) to get started.
