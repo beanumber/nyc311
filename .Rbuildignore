@@ -4,3 +4,5 @@
 ^data-raw$
 ^.*README\.md$
 ^cran-comments\.md$
+^README\.Rmd$
+^README-.*\.png$
