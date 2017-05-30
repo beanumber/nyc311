@@ -24,7 +24,7 @@ calls <- etl("nyc311")
 summary(calls)
 ```
 
-### Populate the database:
+## Populate the database:
 ```{r, message=FALSE}
 calls %>%
   etl_extract(years = 2010:2011, months = 1:2, num_calls = 100) %>%
@@ -44,4 +44,4 @@ And take a look at it.
 glimpse(my_calls)
 ```
 
-Please read [the vignette](https://github.com/beanumber/nyc311/blob/master/vignettes/my-vignette.Rmd) to get started.
+Please read [the vignette](https://github.com/beanumber/nyc311/blob/master/vignettes/my-vignette.Rmd) for more detailed examples.
