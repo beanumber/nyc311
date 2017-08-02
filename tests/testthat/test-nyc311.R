@@ -8,20 +8,6 @@ test_that("instantiation works", {
   expect_is(calls, c("etl_nyc311", "src_sql"))
 })
 
-
-test_that("sqlite works", {
-  if (require(RSQLite)) {
-    expect_s3_class(calls_sqlite <- etl("nyc311"), "src_sqlite")
-    expect_message(calls_sqlite %>% etl_init(), "Could not find")
-    expect_message(calls_sqlite %>% 
-                     etl_update(years = 2010:2011, months = 1:3, num_calls = 100), "Writing NYC311 data")
-    expect_output(print(calls_sqlite), "calls")
-    expect_equal(calls_sqlite %>% 
-                   tbl("calls") %>% collect() %>% nrow(), 600)
-  }
-})
-
-
 test_that("mysql works", {
   if (require(RMySQL) & mysqlHasDefault()) {
     db <- src_mysql(default.file = "~/.my.cnf", 
