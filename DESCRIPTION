@@ -1,9 +1,9 @@
 Package: nyc311
 Title: Access the NYC 311 Data
 Version: 0.0.1.9002
-Date: 2016-07-02
+Date: 2017-08-31
 Authors@R: c(
-    person("Ben", "Baumer", email = "ben.baumer@gmail.com",
+    person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com",
       role = c("aut", "cre")),
     person("Wencong", "Li", email = "liwencong1995@gmail.com", role = "aut"))
 Description: Provides access to the NYC OpenData portal, which contains information 
@@ -27,5 +27,5 @@ Suggests:
     leaflet
 License: CC0
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
