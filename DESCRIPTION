@@ -1,11 +1,10 @@
 Package: nyc311
-Title: Access NYC 311 Data
-Version: 0.1.0
-Date: 2016-07-02
+Title: Accessing NYC 311 Data
+Version: 0.0.1
+Date: 2017-10-24
 Authors@R: c(
-    person("Ben", "Baumer", email = "ben.baumer@gmail.com",
-      role = c("aut", "cre")),
-    person("Wencong", "Li", email = "liwencong1995@gmail.com", role = "aut"))
+    person("Ben", "Baumer", email = "ben.baumer@gmail.com",role = c("aut")),
+    person("Wencong", "Li", email = "liwencong1995@gmail.com", role = c("aut", "cre")))
 Description: Provides access to the NYC OpenData portal, which contains information 
     about calls to 311. 311 pjone number provides users with information
     about non-emergency response from various city agencies. 
@@ -27,5 +26,5 @@ Suggests:
     leaflet
 License: CC0
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr

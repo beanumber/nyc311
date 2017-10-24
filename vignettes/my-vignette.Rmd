@@ -23,14 +23,14 @@ opts_chunk$set(fig.width = 6, fig.height = 4)
 
 The `etl` package provides the generic framework for the `nyc311` package. Since the `nyc311` package currently lives on GitHub and not on CRAN, you have to install it using `devtools`.
 
-```{r, eval=FALSE, message=FALSE}
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
 install.packages("devtools")
 devtools::install_github("beanumber/nyc311")
 ```
 
 ### Load the package
 This command loads both `etl` and `dplyr`.
-```{r, message=TRUE}
+```{r, message=TRUE, warning=FALSE}
 library(nyc311)
 ```
 
@@ -44,13 +44,13 @@ First, you must create an `etl` object.
 
 The `etl` function has three key attributes -- `object`, `dir`, and `db`. 
 
-```{r}
+```{r, warning=FALSE}
 calls <- etl("nyc311")
 summary(calls)
 ```
 By default, a [SQLite](http://www.github.com/rstats-db/RSQLite) database is created in a temporary directory. Please see the [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd) for more options, or see the built-in documentation. 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, warning=FALSE}
 help(etl)
 ```
 
@@ -58,7 +58,7 @@ help(etl)
 
 First, we will populate the database with data from January and February of 2010 and 2011. These data will be downloaded directly from the NYC OpenData portal. 
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 calls %>%
   etl_extract(years = 2010:2011, months = 1:2, num_calls = 100) %>%
   etl_transform(years = 2010:2011, months = 1:2) %>%
@@ -67,12 +67,12 @@ calls %>%
 
 The SQLite database that has just been created is populated with 100 calls from each of these four months. 
 
-```{r}
+```{r, warning=FALSE}
 calls
 ```
 
 Now you can pull the data that you are interested in into your R Environment.
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 my_calls <- calls %>%
   tbl("calls") %>%
   collect()
@@ -80,15 +80,16 @@ my_calls <- calls %>%
 
 And take a look at it.
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 glimpse(my_calls)
 ```
 
 Since all of the `Date` variables have been converted into `character` vectors, it would be helpful to transform the data types.
 
 ### Transform data types:
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(lubridate)
+
 calls_cleaned <- my_calls %>%
   mutate(closed_date = ymd_hms(closed_date)) %>%
   mutate(created_date = ymd_hms(created_date)) %>%
@@ -97,7 +98,7 @@ calls_cleaned <- my_calls %>%
 ```
 
 Now, take a look at it again.
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 glimpse(calls_cleaned)
 ```
 
@@ -105,7 +106,7 @@ glimpse(calls_cleaned)
 
 One obvious question is how many days it takes for NYC agencies to resolve each case. We can compute this by subtracting `closed_date` from `created_date`.
 
-```{r}
+```{r, warning=FALSE}
 calls_new <- calls_cleaned %>%
   mutate(difference = as.numeric(closed_date-created_date))%>%
   arrange(difference)
@@ -113,7 +114,7 @@ calls_new <- calls_cleaned %>%
 Here, we get the number of seconds it takes to resolve each case under a colunmn called `difference`.
 
 Let's take a look at the first 5 rows of `calls_new`. 
-```{r}
+```{r, warning=FALSE}
 calls_new %>%
   select(created_date, closed_date, difference) %>%
   head(5)
@@ -121,7 +122,7 @@ calls_new %>%
 As you can see, some of the `difference` cells have negative entries. Since a case must be created before it is closed, some of the NYC agencies must have made some mistakes in the process of tracking and recording Phone Call information.
 
 Therefore, we probably want to filter out the readings that have negative `difference` values. Then, we can the average number of days by dividing the average number of seconds by `24*60*60` seconds.
-```{r}
+```{r, warning=FALSE}
 calls_new %>%
   filter(difference >= 0) %>%
   summarize(N = n(), mean_hrs = mean(difference) / (24 * 60 * 60))
@@ -132,7 +133,7 @@ For these calls, it took the agencies approximately 13 hours and 24 minutes to s
 ### How long does it take for different NYC agencies to solve an issue?
 
 Does the average number of hours it takes to solve an issue vary among multiple NYC departments?
-```{r}
+```{r, warning=FALSE}
 agency_diff <- calls_new %>%
   filter(difference >= 0) %>%
   group_by(agency_name) %>%
@@ -145,7 +146,7 @@ It seems that `Department of Housing Preservation and Development` is doing a be
 ### How long does it take for NYC agencies to solve differnt types of issue?
 
 Are there differences in the average number of hours it takes to solve each type of complaint?
-```{r}
+```{r, warning=FALSE}
 complaint_diff <- calls_new %>%
   filter(difference >= 0) %>%
   group_by(complaint_type) %>%
@@ -160,7 +161,7 @@ As you can see from the list above, `HEATING` takes the least time to resolve!
 
 Most of the calls have a latitude and longitude coordinate record, so we can contextualize these observations using a map. In this example, we illustrate where general construction issues occurred. 
 
-```{r}
+```{r, warning=FALSE}
 complaint_type <- calls_new %>%
   group_by(complaint_type) %>%
   summarize(N = n()) %>%
@@ -168,10 +169,12 @@ complaint_type <- calls_new %>%
 
 general_construction_location <- my_calls %>%
   filter(complaint_type == "GENERAL CONSTRUCTION") %>%
-  select(latitude, longitude)
+  select(latitude, longitude) %>%
+  mutate(latitude = as.numeric(latitude), longitude = as.numeric(longitude))
 ```
 
 ```{r}
+class(general_construction_location$latitude)
 if (require(leaflet)) { 
   leaflet(data = general_construction_location) %>% 
     addTiles() %>%

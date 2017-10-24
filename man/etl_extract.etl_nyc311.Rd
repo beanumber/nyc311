@@ -59,4 +59,3 @@ calls_df <- calls \%>\%
   collect()
 }
 }
-
