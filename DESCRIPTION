@@ -5,8 +5,8 @@ Date: 2017-10-24
 Authors@R: c(
     person("Ben", "Baumer", email = "ben.baumer@gmail.com",role = c("aut")),
     person("Wencong", "Li", email = "liwencong1995@gmail.com", role = c("aut", "cre")))
-Description: Provides access to the NYC OpenData portal, which contains information 
-    about calls to 311. 311 pjone number provides users with information
+Description: Provides access to the NYC Open Data portal, which contains information 
+    about calls to 311. 311 phone number provides users with information
     about non-emergency response from various city agencies. 
 Depends:
     R (>= 3.2.3),
