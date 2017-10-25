@@ -16,7 +16,7 @@ opts_chunk$set(fig.width = 6, fig.height = 4)
 
 ## NYC 311 Open Data 
 
-3-1-1 <https://en.wikipedia.org/wiki/3-1-1> is a telephone number used in the United States for citizens to get access to non-emergency municipal services. The `nyc311` package provides an interface to NYC 311 Phone Call information from NYC OpenData <https://nycopendata.socrata.com>. Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
+[3-1-1](https://en.wikipedia.org/wiki/3-1-1) is a telephone number used in the United States for citizens to get access to non-emergency municipal services. The `nyc311` package provides an interface to NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
 
 ## Getting started:
 ### Install packages

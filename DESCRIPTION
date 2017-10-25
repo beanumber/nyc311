@@ -23,7 +23,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    leaflet
+    leaflet,
+    dbplyr
 License: CC0
 LazyData: true
 RoxygenNote: 6.0.1
