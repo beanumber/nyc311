@@ -16,7 +16,7 @@ opts_chunk$set(fig.width = 6, fig.height = 4)
 
 ## NYC 311 Open Data 
 
-[3-1-1](https://en.wikipedia.org/wiki/3-1-1) is a telephone number used in the United States for citizens to get access to non-emergency municipal services. The `nyc311` package provides an interface to NYC 311 Phone Call information from [NYC OpenData](https://nycopendata.socrata.com). Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
+3-1-1 <https://en.wikipedia.org/wiki/3-1-1> is a telephone number used in the United States for citizens to get access to non-emergency municipal services. The `nyc311` package provides an interface to NYC 311 Phone Call information from NYC OpenData <https://nycopendata.socrata.com>. Because these are **medium** data, the `nyc311` packages leverages the `etl` package for creating and maintaining an SQL database. 
 
 ## Getting started:
 ### Install packages
@@ -48,7 +48,7 @@ The `etl` function has three key attributes -- `object`, `dir`, and `db`.
 calls <- etl("nyc311")
 summary(calls)
 ```
-By default, a [SQLite](http://www.github.com/rstats-db/RSQLite) database is created in a temporary directory. Please see the [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd) for more options, or see the built-in documentation. 
+By default, a [SQLite](http://www.github.com/rstats-db/RSQLite) database is created in a temporary directory. Please read the [etl doucumentation](https://github.com/beanumber/etl/blob/master/README.Rmd) for more information. 
 
 ```{r, eval=FALSE, warning=FALSE}
 help(etl)
