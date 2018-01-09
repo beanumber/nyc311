@@ -24,7 +24,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    leaflet
+    leaflet,
+    dbplyr
 License: CC0
 LazyData: true
 URL: http://github.com/beanumber/nyc311
