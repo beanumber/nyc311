@@ -27,5 +27,7 @@ Suggests:
     leaflet
 License: CC0
 LazyData: true
+URL: http://github.com/beanumber/nyc311
+BugReports: https://github.com/beanumber/nyc311/issues
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
